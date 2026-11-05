@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4AM Séquence 2 - Plateforme Éducative التفاعلية</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Montserrat & Playfair Display -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Montserrat', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .font-title {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Remote Focus Highlight Styling */
+        .focusable {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+        }
+
+        .focusable:focus, .focusable.remote-focused {
+            transform: scale(1.03);
+            box-shadow: 0 0 0 5px #F59E0B, 0 15px 30px -5px rgba(0, 0, 0, 0.6);
+            border-color: #F59E0B !important;
+            z-index: 30;
+        }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D97706;
+            border-radius: 4px;
+        }
+
+        /* Slide System */
+        .lesson-container {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .lesson-container.active-lesson {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .slide {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+            transform: translateY(15px);
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen h-screen flex flex-col justify-between overflow-hidden relative">
+
+    <!-- Glowing Background Accents -->
+    <div class="absolute top-[-10%] left-[-10%] w-[550px] h-[550px] bg-amber-600/20 rounded-full blur-[130px] pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[550px] h-[550px] bg-emerald-600/15 rounded-full blur-[130px] pointer-events-none"></div>
+
+    <!-- ==================== MAIN DASHBOARD / SELECTION PAGE ==================== -->
+    <div id="mainPortal" class="w-full h-full flex flex-col justify-between p-6 md:p-10 z-20 overflow-y-auto">
+        <!-- Header -->
+        <div class="flex justify-between items-center bg-slate-900/80 p-6 rounded-3xl border border-slate-800 shadow-2xl backdrop-blur-md">
+            <div class="flex items-center gap-5">
+                <div class="bg-gradient-to-r from-amber-500 to-emerald-600 text-slate-950 p-4 rounded-2xl shadow-lg">
+                    <i class="fa-solid fa-graduation-cap text-3xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-black text-white tracking-wide">Plateforme Éducative de Français</h1>
+                    <p class="text-amber-400 font-bold text-sm">4<sup>ème</sup> Année Moyenne (4AM) • Séquence 02 : Gloire à nos ancêtres !</p>
+                </div>
+            </div>
+
+            <!-- Teacher Info Badge -->
+            <div class="hidden md:flex flex-col text-right bg-slate-800/80 px-5 py-2.5 rounded-2xl border border-slate-700">
+                <span class="text-xs text-slate-400 font-bold uppercase">Enseignant & Collège</span>
+                <span class="text-base font-black text-amber-300">HAFES Abdelatif</span>
+                <span class="text-xs text-slate-200">Collège : 1<sup>er</sup> novembre 1954</span>
+            </div>
+        </div>
+
+        <!-- Portal Main Content: Selection Cards -->
+        <div class="my-auto py-6 flex flex-col items-center gap-8">
+            <div class="text-center space-y-2">
+                <span class="bg-amber-500/10 border border-amber-500/30 text-amber-300 px-5 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">
+                    <i class="fa-solid fa-book-open mr-2"></i>Choisissez la leçon à présenter
+                </span>
+                <h2 class="text-3xl md:text-5xl font-black text-white font-title">Module de Français • Séquence 2</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
+                <!-- Lesson 1 Card: Production de l'oral -->
+                <div onclick="launchLesson('lesson1')" class="focusable glass-card p-8 rounded-3xl border-2 border-emerald-500/30 hover:border-emerald-500 cursor-pointer transition-all flex flex-col justify-between space-y-6 group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-bl-full pointer-events-none"></div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-emerald-500/20 text-emerald-300 font-black text-xs px-4 py-1.5 rounded-xl border border-emerald-500/40">SÉANCE 01</span>
+                            <i class="fa-solid fa-horse-head text-3xl text-emerald-400 group-hover:scale-110 transition-transform"></i>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-black text-white group-hover:text-emerald-300 transition-colors">Production de l'oral</h3>
+                        <p class="text-amber-300 font-bold text-base">L'émir Abdelkader</p>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Analyse du document iconique (Bataille de la Macta), découverte de l'Émir Abdelkader, banque de mots et activités d'expression orale.
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-4 border-t border-slate-800">
+                        <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-book mr-1"></i>Manuel p. 29</span>
+                        <span class="bg-emerald-500 text-slate-950 font-black text-sm px-5 py-2 rounded-xl flex items-center gap-2">
+                            <span>Lancer</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Lesson 2 Card: Compréhension de l'écrit -->
+                <div onclick="launchLesson('lesson2')" class="focusable glass-card p-8 rounded-3xl border-2 border-amber-500/30 hover:border-amber-500 cursor-pointer transition-all flex flex-col justify-between space-y-6 group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-bl-full pointer-events-none"></div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-amber-500/20 text-amber-300 font-black text-xs px-4 py-1.5 rounded-xl border border-amber-500/40">SÉANCE 02</span>
+                            <i class="fa-solid fa-shield-halved text-3xl text-amber-400 group-hover:scale-110 transition-transform"></i>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-black text-white group-hover:text-amber-300 transition-colors">Compréhension de l'écrit</h3>
+                        <p class="text-amber-300 font-bold text-base">Jugurtha contre Metellus</p>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Texte historique intégral, exploitation du texte, questions interactives QCM/Vrai-Faux, et tableau de synthèse (Thèse & Arguments).
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-4 border-t border-slate-800">
+                        <span class="text-xs text-slate-400 font-semibold"><i class="fa-solid fa-book mr-1"></i>Manuel p. 30</span>
+                        <span class="bg-amber-500 text-slate-950 font-black text-sm px-5 py-2 rounded-xl flex items-center gap-2">
+                            <span>Lancer</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Info -->
+        <div class="text-center text-xs text-slate-500 font-semibold border-t border-slate-900 pt-4">
+            تأكد من إمكانية التنقل بواسطة الريموت كنترول باستخدام الأسهم والتأكيد بواسطة زر OK
+        </div>
+    </div>
+
+
+    <!-- ==================== LESSON 1: PRODUCTION DE L'ORAL ==================== -->
+    <div id="lesson1" class="lesson-container">
+        <!-- Header -->
+        <header class="bg-slate-900/90 border-b border-slate-800 px-8 py-3 flex justify-between items-center z-20 shadow-xl backdrop-blur-md">
+            <div class="flex items-center gap-4">
+                <button onclick="returnToPortal()" class="focusable bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Accueil</span>
+                </button>
+                <div>
+                    <h1 class="text-lg md:text-xl font-black text-white">Production de l'oral : L'émir Abdelkader</h1>
+                    <p class="text-xs font-semibold text-emerald-400">4AM • Séquence 02 (Manuel p. 29)</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="changeSlide('lesson1', -1)" class="focusable bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 font-bold text-xs cursor-pointer">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Précédent</span>
+                </button>
+                <button onclick="changeSlide('lesson1', 1)" class="focusable bg-gradient-to-r from-emerald-600 to-amber-600 border border-amber-400 text-white px-5 py-2 rounded-xl flex items-center gap-2 font-bold text-xs cursor-pointer shadow-lg">
+                    <span>Suivant</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Slide Content Area -->
+        <main class="flex-1 p-6 md:p-8 flex justify-center items-center relative overflow-hidden z-10">
+
+            <!-- L1-SLIDE 1: INTRO -->
+            <section class="slide active w-full max-w-6xl flex-col items-center justify-center text-center gap-6">
+                <div class="inline-flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/30 px-6 py-2 rounded-full text-emerald-300 text-sm font-bold">
+                    <i class="fa-solid fa-feather-pointed text-emerald-400"></i>
+                    <span>Tâche 1 : Rédiger un texte descriptif à visée argumentative</span>
+                </div>
+
+                <h1 class="font-title text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-orange-100 to-emerald-300 leading-tight">
+                    Production de l'oral : L'émir Abdelkader
+                </h1>
+
+                <p class="text-base md:text-xl text-slate-300 max-w-3xl font-medium leading-relaxed">
+                    « Produire des arguments pour étayer une thèse • Formuler des arguments pour appuyer un point de vue »
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mt-2">
+                    <div class="glass-card p-6 rounded-3xl text-left border-l-4 border-l-amber-500">
+                        <h4 class="text-amber-400 text-xs font-bold uppercase mb-2">Enseignant & Collège</h4>
+                        <p class="text-lg font-black text-white">HAFES Abdelatif</p>
+                        <p class="text-sm font-semibold text-slate-300 mt-1">Collège : 1<sup>er</sup> novembre 1954</p>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-3xl text-left border-l-4 border-l-emerald-500">
+                        <h4 class="text-emerald-400 text-xs font-bold uppercase mb-2">Objectifs</h4>
+                        <p class="text-xs font-semibold text-slate-200 mt-1">• Construire du sens à partir d'un document iconique.</p>
+                        <p class="text-xs font-semibold text-slate-200 mt-1">• Formuler des arguments pour appuyer un point de vue.</p>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-3xl text-left border-l-4 border-l-blue-500">
+                        <h4 class="text-blue-400 text-xs font-bold uppercase mb-2">Support & Matériel</h4>
+                        <p class="text-sm font-bold text-slate-100 mt-1">Manuel scolaire p. 29</p>
+                        <p class="text-xs text-slate-400 mt-1">Illustration de la bataille de la Macta</p>
+                    </div>
+                </div>
+
+                <button onclick="changeSlide('lesson1', 1)" class="focusable bg-gradient-to-r from-emerald-500 to-amber-500 text-slate-950 font-black text-lg px-8 py-3 rounded-2xl shadow-2xl flex items-center gap-3 cursor-pointer mt-2">
+                    <span>Lancer la leçon</span>
+                    <i class="fa-solid fa-play"></i>
+                </button>
+            </section>
+
+            <!-- L1-SLIDE 2: OBSERVATION -->
+            <section class="slide w-full max-w-6xl flex-col gap-6">
+                <div class="border-l-8 border-amber-500 pl-6">
+                    <h2 class="text-3xl font-black text-white">I. Mise en train & Observation</h2>
+                    <p class="text-slate-400 text-base">Introduction au personnage historique et observation du document iconique (p. 29)</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                    <div class="md:col-span-6 flex flex-col items-center">
+                        <div class="glass-card p-3 rounded-3xl border-2 border-amber-500/40 relative shadow-2xl overflow-hidden w-full text-center">
+                            <img src="img51.jpg" alt="Bataille de la Macta - L'émir Abdelkader" class="w-full h-72 object-cover rounded-2xl shadow-lg border border-slate-700" onerror="this.onerror=null; this.src='https://placehold.co/800x450/0f172a/f59e0b?text=Bataille+de+la+Macta+-+L%27%C3%A9mir+Abdelkader';">
+                            <div class="mt-2 text-center">
+                                <span class="bg-emerald-500/20 text-emerald-300 text-xs px-4 py-1 rounded-full font-bold border border-emerald-500/40">Bataille de la Macta (28 juin 1835) • Hocine Ziani</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-6 space-y-4">
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-l-amber-500">
+                            <h3 class="text-amber-400 text-xs font-bold uppercase mb-1"><i class="fa-solid fa-circle-question mr-2"></i>Mise en train :</h3>
+                            <p class="text-slate-100 font-bold text-base">Qui est l'Émir Abdelkader ?</p>
+                            <p class="text-emerald-300 font-bold text-sm mt-2 bg-slate-900/80 p-3 rounded-xl border border-slate-800 leading-relaxed">
+                                « L'Émir Abdelkader (1808-1883) fut un chef militaire et spirituel algérien, qui mena la résistance contre la colonisation française au 19ᵉ siècle. »
+                            </p>
+                        </div>
+
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-l-blue-500">
+                            <h3 class="text-blue-400 text-xs font-bold uppercase mb-1"><i class="fa-solid fa-eye mr-2"></i>Observation du tableau :</h3>
+                            <p class="text-slate-200 font-bold text-sm">Observez attentivement la peinture ci-contre :</p>
+                            <ul class="text-xs text-slate-300 mt-2 space-y-1">
+                                <li>• <strong class="text-amber-300">Que représente le personnage au centre ?</strong></li>
+                                <li>• <strong class="text-amber-300">Quelle est l'atmosphère du combat ?</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- L1-SLIDE 3: ANALYSE 1 -->
+            <section class="slide w-full max-w-6xl flex-col gap-5">
+                <div class="border-l-8 border-emerald-500 pl-6">
+                    <h2 class="text-2xl font-black text-white">II. Analyse du document iconique (1/2)</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-card p-5 rounded-3xl border border-slate-700 flex flex-col justify-between">
+                        <div>
+                            <span class="text-amber-400 text-xs font-bold uppercase block mb-2">Question 1</span>
+                            <h4 class="text-base font-bold text-white mb-3">Que voyez-vous sur l'image ?</h4>
+                        </div>
+                        <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800">
+                            <p class="text-emerald-400 text-xs font-bold">► C'est une illustration renvoyant à la bataille de la Macta / Hocine Ziani.</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-3xl border border-slate-700 flex flex-col justify-between">
+                        <div>
+                            <span class="text-amber-400 text-xs font-bold uppercase block mb-2">Question 2</span>
+                            <h4 class="text-base font-bold text-white mb-3">À quelle époque remonte-t-elle ?</h4>
+                        </div>
+                        <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800">
+                            <p class="text-emerald-400 text-xs font-bold">► Elle remonte à l'époque coloniale (Bataille historique au 19ᵉ siècle).</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-3xl border border-slate-700 flex flex-col justify-between">
+                        <div>
+                            <span class="text-amber-400 text-xs font-bold uppercase block mb-2">Question 3</span>
+                            <h4 class="text-base font-bold text-white mb-3">Où est-ce qu'elle a eu lieu ?</h4>
+                        </div>
+                        <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800">
+                            <p class="text-emerald-400 text-xs font-bold">► À l'ouest du pays (Région de la Macta / Oranie).</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- L1-SLIDE 4: ANALYSE 2 -->
+            <section class="slide w-full max-w-6xl flex-col gap-4">
+                <div class="border-l-8 border-indigo-500 pl-6">
+                    <h2 class="text-2xl font-black text-white">II. Analyse du document iconique (2/2)</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <div class="md:col-span-7 glass-card p-5 rounded-3xl border border-slate-700 space-y-3">
+                        <h3 class="text-amber-400 text-sm font-bold uppercase"><i class="fa-solid fa-layer-group mr-2"></i>4) Description des différents plans :</h3>
+                        <div class="space-y-2">
+                            <div class="p-3 bg-slate-900/90 rounded-2xl border border-slate-800 text-xs">
+                                <span class="text-amber-300 font-bold">a. Au premier plan :</span>
+                                <p class="text-emerald-400 font-bold mt-0.5">► Un soldat français à terre.</p>
+                            </div>
+                            <div class="p-3 bg-slate-900/90 rounded-2xl border border-slate-800 text-xs">
+                                <span class="text-amber-300 font-bold">b. Au second plan :</span>
+                                <p class="text-emerald-400 font-bold mt-0.5">► L'Émir Abdelkader menant le combat avec bravoure.</p>
+                            </div>
+                            <div class="p-3 bg-slate-900/90 rounded-2xl border border-slate-800 text-xs">
+                                <span class="text-amber-300 font-bold">c. À l'arrière-plan :</span>
+                                <p class="text-emerald-400 font-bold mt-0.5">► Les troupes de l'Émir harcelant l'ennemi.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-5 glass-card p-5 rounded-3xl border border-slate-700 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-purple-400 text-sm font-bold uppercase mb-2"><i class="fa-solid fa-palette mr-2"></i>5) Intention du peintre :</h3>
+                            <p class="text-sm font-bold text-white mb-3">Le peintre veut que le personnage central paraisse :</p>
+                            <div class="space-y-2">
+                                <button onclick="checkAnswer(this, false, 'l1q5')" class="focusable quiz-opt w-full bg-slate-800 p-2.5 rounded-xl text-left text-xs font-bold border border-slate-600 cursor-pointer">a) Fort</button>
+                                <button onclick="checkAnswer(this, false, 'l1q5')" class="focusable quiz-opt w-full bg-slate-800 p-2.5 rounded-xl text-left text-xs font-bold border border-slate-600 cursor-pointer">b) Faible</button>
+                                <button onclick="checkAnswer(this, true, 'l1q5')" class="focusable quiz-opt w-full bg-slate-800 p-2.5 rounded-xl text-left text-xs font-bold border border-slate-600 cursor-pointer">c) Courageux</button>
+                            </div>
+                        </div>
+                        <div id="l1q5-feedback" class="hidden p-2 rounded-xl text-xs font-bold text-center mt-2"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- L1-SLIDE 5: VOCABULAIRE & RÉCAPITULATION -->
+            <section class="slide w-full max-w-6xl flex-col gap-5">
+                <div class="border-l-8 border-amber-500 pl-6">
+                    <h2 class="text-3xl font-black text-white">III. Expression orale & Boîte à mots</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="glass-card p-4 rounded-2xl border-t-4 border-t-amber-500">
+                        <h4 class="text-amber-400 font-bold text-xs uppercase mb-2">Noms</h4>
+                        <div class="flex flex-wrap gap-1.5 text-xs font-semibold">
+                            <span class="bg-slate-800 text-amber-200 px-2 py-1 rounded-lg">Un grand héros</span>
+                            <span class="bg-slate-800 text-amber-200 px-2 py-1 rounded-lg">Un chef militaire</span>
+                            <span class="bg-slate-800 text-amber-200 px-2 py-1 rounded-lg">La résistance</span>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-4 rounded-2xl border-t-4 border-t-emerald-500">
+                        <h4 class="text-emerald-400 font-bold text-xs uppercase mb-2">Adjectifs</h4>
+                        <div class="flex flex-wrap gap-1.5 text-xs font-semibold">
+                            <span class="bg-slate-800 text-emerald-200 px-2 py-1 rounded-lg">Courageux</span>
+                            <span class="bg-slate-800 text-emerald-200 px-2 py-1 rounded-lg">Intelligent</span>
+                            <span class="bg-slate-800 text-emerald-200 px-2 py-1 rounded-lg">Stratège</span>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-4 rounded-2xl border-t-4 border-t-blue-500">
+                        <h4 class="text-blue-400 font-bold text-xs uppercase mb-2">Verbes</h4>
+                        <div class="flex flex-wrap gap-1.5 text-xs font-semibold">
+                            <span class="bg-slate-800 text-blue-200 px-2 py-1 rounded-lg">Combattre</span>
+                            <span class="bg-slate-800 text-blue-200 px-2 py-1 rounded-lg">Défendre</span>
+                            <span class="bg-slate-800 text-blue-200 px-2 py-1 rounded-lg">Mener la bataille</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-card p-5 rounded-3xl border border-slate-700 space-y-2">
+                        <h3 class="text-amber-400 font-bold text-sm">Expressions pour l'élève :</h3>
+                        <ul class="text-xs space-y-2 text-slate-200">
+                            <li class="bg-slate-900/80 p-2.5 rounded-xl"><strong>• À mon avis,</strong> l'Émir Abdelkader était un grand homme...</li>
+                            <li class="bg-slate-900/80 p-2.5 rounded-xl"><strong>• D'après la peinture,</strong> il dirigeait ses soldats avec bravoure.</li>
+                        </ul>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-3xl border border-slate-700 space-y-2 border-l-4 border-l-emerald-500">
+                        <h3 class="text-lg font-bold text-white">Récapitulation (Synthèse orale) :</h3>
+                        <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800 text-slate-100 text-xs leading-relaxed">
+                            « L'Émir Abdelkader était un grand chef de guerre. <strong>D'abord</strong>, il a combattu l'armée française avec bravoure. <strong>De plus</strong>, il a réussi à unifier les tribus. <strong>Enfin</strong>, il était respecté pour sa sagesse. »
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-slate-900/90 border-t border-slate-800 px-8 py-3 z-20">
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-xs text-slate-400">Diapositive <strong id="l1-cur" class="text-amber-400">1</strong> / <span id="l1-tot">5</span></span>
+                <span class="text-xs text-slate-400">Fleches (◄ / ►) OK (Valider)</span>
+            </div>
+            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div id="l1-progress" class="bg-gradient-to-r from-emerald-500 to-amber-500 h-full transition-all duration-300"></div>
+            </div>
+        </footer>
+    </div>
+
+
+    <!-- ==================== LESSON 2: COMPRÉHENSION DE L'ÉCRIT ==================== -->
+    <div id="lesson2" class="lesson-container">
+        <!-- Header -->
+        <header class="bg-slate-900/90 border-b border-slate-800 px-8 py-3 flex justify-between items-center z-20 shadow-xl backdrop-blur-md">
+            <div class="flex items-center gap-4">
+                <button onclick="returnToPortal()" class="focusable bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Accueil</span>
+                </button>
+                <div>
+                    <h1 class="text-lg md:text-xl font-black text-white">Compréhension de l'écrit 1 : Jugurtha contre Metellus</h1>
+                    <p class="text-xs font-semibold text-amber-400">4AM • Séquence 02 (Manuel p. 30)</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="changeSlide('lesson2', -1)" class="focusable bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 font-bold text-xs cursor-pointer">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Précédent</span>
+                </button>
+                <button onclick="changeSlide('lesson2', 1)" class="focusable bg-gradient-to-r from-amber-600 to-red-600 border border-amber-400 text-white px-5 py-2 rounded-xl flex items-center gap-2 font-bold text-xs cursor-pointer shadow-lg">
+                    <span>Suivant</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Slide Content Area -->
+        <main class="flex-1 p-6 md:p-8 flex justify-center items-center relative overflow-hidden z-10">
+
+            <!-- L2-SLIDE 1: INTRO -->
+            <section class="slide active w-full max-w-6xl flex-col items-center justify-center text-center gap-6">
+                <div class="inline-flex items-center gap-3 bg-amber-500/10 border border-amber-500/30 px-6 py-2 rounded-full text-amber-300 text-sm font-bold">
+                    <i class="fa-solid fa-crown text-amber-400"></i>
+                    <span>Projet 1 • Tâche 1 : Mettre en valeur l'histoire de la Numidie</span>
+                </div>
+
+                <h1 class="font-title text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-orange-100 to-red-300 leading-tight">
+                    Jugurtha contre Metellus
+                </h1>
+
+                <p class="text-base md:text-xl text-slate-300 max-w-3xl font-medium leading-relaxed">
+                    « Produire des arguments pour étayer une thèse »
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mt-2">
+                    <div class="glass-card p-6 rounded-3xl text-left border-l-4 border-l-amber-500">
+                        <h4 class="text-amber-400 text-xs font-bold uppercase mb-2">Enseignant & Collège</h4>
+                        <p class="text-lg font-black text-white">HAFES Abdelatif</p>
+                        <p class="text-sm font-semibold text-slate-300 mt-1">Collège : 1<sup>er</sup> novembre 1954</p>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-3xl text-left border-l-4 border-l-red-500">
+                        <h4 class="text-red-400 text-xs font-bold uppercase mb-2">Objectifs</h4>
+                        <p class="text-xs font-semibold text-slate-200 mt-1">• Construire du sens à partir d'un document écrit.</p>
+                        <p class="text-xs font-semibold text-slate-200 mt-1">• Identifier les arguments valorisant le personnage historique.</p>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-3xl text-left border-l-4 border-l-emerald-500">
+                        <h4 class="text-emerald-400 text-xs font-bold uppercase mb-2">Support & Matériel</h4>
+                        <p class="text-sm font-bold text-slate-100 mt-1">Manuel scolaire p. 30</p>
+                        <p class="text-xs text-slate-300 mt-0.5">D'après Salluste, « La guerre de Jugurtha »</p>
+                    </div>
+                </div>
+
+                <button onclick="changeSlide('lesson2', 1)" class="focusable bg-gradient-to-r from-amber-500 to-red-600 text-slate-950 font-black text-lg px-8 py-3 rounded-2xl shadow-2xl flex items-center gap-3 cursor-pointer mt-2">
+                    <span>Commencer la leçon</span>
+                    <i class="fa-solid fa-play"></i>
+                </button>
+            </section>
+
+            <!-- L2-SLIDE 2: MISE EN TRAIN -->
+            <section class="slide w-full max-w-6xl flex-col gap-6">
+                <div class="border-l-8 border-amber-500 pl-6">
+                    <h2 class="text-3xl font-black text-white">I. Mise en train & Éléments périphériques</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                    <div class="md:col-span-5 flex flex-col items-center">
+                        <div class="glass-card p-5 rounded-3xl border-2 border-amber-500/40 relative shadow-2xl overflow-hidden w-full text-center">
+                            <div class="w-full h-64 rounded-2xl bg-slate-900/90 border border-slate-700 flex flex-col justify-center items-center p-5">
+                                <i class="fa-solid fa-shield-halved text-6xl text-amber-400 mb-3 animate-pulse"></i>
+                                <h3 class="text-2xl font-black text-white tracking-wide">Rois de Numidie</h3>
+                                <div class="mt-4 flex flex-wrap justify-center gap-2">
+                                    <span class="bg-amber-500 text-slate-950 text-xs px-3 py-1 rounded-full font-black">Jugurtha</span>
+                                    <span class="bg-amber-500/20 text-amber-300 text-xs px-3 py-1 rounded-full font-bold">Massinissa</span>
+                                    <span class="bg-amber-500/20 text-amber-300 text-xs px-3 py-1 rounded-full font-bold">Syphax</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-7 space-y-4">
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-l-blue-500">
+                            <h3 class="text-blue-400 text-xs font-bold uppercase mb-1"><i class="fa-solid fa-flag mr-2"></i>Mise en train :</h3>
+                            <p class="text-slate-100 font-bold text-base">Connaissez-vous quelques noms de rois numides ?</p>
+                            <p class="text-emerald-400 font-bold text-sm mt-1">► Massinissa, Jugurtha, Syphax, Micipsa...</p>
+                        </div>
+
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-l-amber-500">
+                            <h3 class="text-amber-400 text-xs font-bold uppercase mb-1"><i class="fa-solid fa-list-check mr-2"></i>Les éléments périphériques :</h3>
+                            <ul class="text-sm space-y-1.5 text-slate-200">
+                                <li>• <strong class="text-amber-300">Titre :</strong> Jugurtha contre Metellus</li>
+                                <li>• <strong class="text-amber-300">Auteur :</strong> Salluste</li>
+                                <li>• <strong class="text-amber-300">Source :</strong> D'après « La guerre de Jugurtha » (2000)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- L2-SLIDE 3: TEXTE INTEGRAL -->
+            <section class="slide w-full max-w-6xl flex-col gap-4">
+                <div class="flex justify-between items-center border-l-8 border-amber-500 pl-6">
+                    <div>
+                        <h2 class="text-2xl font-black text-white">II. Texte Support : Jugurtha contre Metellus</h2>
+                        <p class="text-slate-400 text-xs">Lecture silencieuse puis lecture magistrale</p>
+                    </div>
+                    <span class="bg-amber-500/20 text-amber-300 text-xs px-4 py-2 rounded-xl font-bold border border-amber-500/40">Manuel p. 30</span>
+                </div>
+
+                <div class="glass-card p-6 rounded-3xl border border-slate-700 text-slate-100 leading-relaxed text-sm md:text-base max-h-[60vh] overflow-y-auto space-y-4 shadow-2xl">
+                    <div class="bg-amber-950/40 p-3 rounded-2xl border-l-4 border-amber-500 text-amber-200 text-xs md:text-sm font-medium italic">
+                        Metellus, consul romain d'Africa mène un combat contre Jugurtha, roi de Numidie et redoutable chef de guerre qui veut chasser les Romains d'Afrique du nord.
+                    </div>
+
+                    <p class="text-justify font-normal">
+                        Quand Jugurtha voit les derniers rangs de l'armée de Metellus dépasser son avant-garde, il fait <strong class="text-amber-400 font-bold underline decoration-amber-500">d'abord</strong> occuper la montagne d'où le consul romain vient de descendre pour l'empêcher d'y retourner. <strong class="text-amber-400 font-bold underline decoration-amber-500">Puis</strong>, donnant le signal, les Numides attaquent à droite, à gauche pour bouleverser nos rangs. [...] Nos soldats qui se portent contre l'ennemi, déconcertés par le désordre qui règne dans le combat, n'y gagnent que d'être blessés.
+                    </p>
+
+                    <p class="text-justify bg-slate-900/90 p-4 rounded-2xl border border-slate-700 text-slate-100 font-normal">
+                        Jugurtha avait, en effet, recommandé à ses cavaliers, chaque fois qu'ils seraient attaqués par les Romains, de fuir dans des directions opposées. Ainsi les Numides, s'ils ne pouvaient pas empêcher les Romains de les poursuivre, profitaient de leur supériorité numérique pour les forcer à se disperser et pour les attaquer ensuite en les encerclant.
+                    </p>
+
+                    <p class="text-justify font-normal">
+                        [...] <strong class="text-amber-400 font-bold underline decoration-amber-500">Enfin</strong>, ils se repliaient en empruntant la colline car leurs chevaux étaient habitués aux broussailles tandis que les nôtres se heurtaient aux difficultés d'un terrain étranger.
+                    </p>
+
+                    <div class="text-right text-xs text-amber-300/80 italic pt-2 border-t border-slate-800">
+                        D'après Salluste, « La guerre de Jugurtha », Les Belles Lettres (2000)
+                    </div>
+                </div>
+            </section>
+
+            <!-- L2-SLIDE 4: EXPLOITATION 1 -->
+            <section class="slide w-full max-w-6xl flex-col gap-4">
+                <div class="border-l-8 border-indigo-500 pl-6">
+                    <h2 class="text-2xl font-black text-white">III. Exploitation du texte (Questions 1 à 4)</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="glass-card p-4 rounded-2xl border border-slate-700">
+                        <p class="text-sm font-bold text-amber-300 mb-2">1) L'auteur de ce texte :</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="checkAnswer(this, true, 'l2q1')" class="focusable quiz-opt bg-slate-800 p-2.5 rounded-xl text-center text-xs font-bold border border-slate-600 cursor-pointer">a- Décrit</button>
+                            <button onclick="checkAnswer(this, false, 'l2q1')" class="focusable quiz-opt bg-slate-800 p-2.5 rounded-xl text-center text-xs font-bold border border-slate-600 cursor-pointer">b- Raconte</button>
+                            <button onclick="checkAnswer(this, false, 'l2q1')" class="focusable quiz-opt bg-slate-800 p-2.5 rounded-xl text-center text-xs font-bold border border-slate-600 cursor-pointer">c- Explique</button>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-4 rounded-2xl border border-slate-700">
+                        <p class="text-sm font-bold text-amber-300 mb-2">2) Deux armées qui s'affrontent :</p>
+                        <div class="p-2.5 bg-slate-900/80 rounded-xl border border-slate-800">
+                            <p class="text-xs font-bold text-emerald-400">► L'armée Numide et l'armée Romaine.</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-4 rounded-2xl border border-slate-700">
+                        <p class="text-sm font-bold text-amber-300 mb-2">3) Qui était Jugurtha ?</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="checkAnswer(this, false, 'l2q3')" class="focusable quiz-opt bg-slate-800 p-2 rounded-xl text-center text-xs font-bold border border-slate-600 cursor-pointer">Consul</button>
+                            <button onclick="checkAnswer(this, false, 'l2q3')" class="focusable quiz-opt bg-slate-800 p-2 rounded-xl text-center text-xs font-bold border border-slate-600 cursor-pointer">Général</button>
+                            <button onclick="checkAnswer(this, true, 'l2q3')" class="focusable quiz-opt bg-slate-800 p-2 rounded-xl text-center text-xs font-bold border border-slate-600 cursor-pointer">Roi Numide</button>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-4 rounded-2xl border border-slate-700">
+                        <p class="text-sm font-bold text-amber-300 mb-2">4) Dans quel but occuper la montagne ?</p>
+                        <div class="p-2.5 bg-slate-900/80 rounded-xl border border-slate-800">
+                            <p class="text-xs font-bold text-emerald-400">► Pour empêcher le consul romain d'y retourner.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="l2q1-feedback" class="hidden p-2 rounded-xl text-xs font-bold text-center"></div>
+            </section>
+
+            <!-- L2-SLIDE 5: SYNTHÈSE -->
+            <section class="slide w-full max-w-6xl flex-col gap-5">
+                <div class="border-l-8 border-emerald-500 pl-6">
+                    <h2 class="text-2xl font-black text-white">IV. Langue & Tableau de Synthèse</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="glass-card p-5 rounded-3xl border border-slate-700 space-y-3">
+                        <h3 class="text-amber-400 font-bold text-sm uppercase"><i class="fa-solid fa-list-ol mr-2"></i>Connecteurs d'énumération :</h3>
+                        <div class="flex justify-around">
+                            <span class="bg-amber-500/20 text-amber-300 font-black px-4 py-2 rounded-xl border border-amber-500/40 text-sm">D'abord</span>
+                            <span class="bg-amber-500/20 text-amber-300 font-black px-4 py-2 rounded-xl border border-amber-500/40 text-sm">Puis</span>
+                            <span class="bg-amber-500/20 text-amber-300 font-black px-4 py-2 rounded-xl border border-amber-500/40 text-sm">Enfin</span>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-3xl border border-slate-700 space-y-3">
+                        <h3 class="text-blue-400 font-bold text-sm uppercase"><i class="fa-solid fa-clock mr-2"></i>Temps dominant :</h3>
+                        <p class="text-emerald-400 font-black text-center text-base bg-emerald-500/10 p-2.5 rounded-xl border border-emerald-500/30">
+                            Le présent de l'indicatif (Présent de narration)
+                        </p>
+                    </div>
+                </div>
+
+                <div class="glass-card p-5 rounded-3xl border border-slate-700">
+                    <h3 class="text-amber-400 font-bold text-sm mb-3 uppercase"><i class="fa-solid fa-table mr-2"></i>Tableau de Synthèse (Thèse & Arguments)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                        <div class="md:col-span-4 bg-amber-500/10 border border-amber-500/40 p-4 rounded-2xl flex flex-col justify-center">
+                            <span class="text-xs font-black text-amber-400 uppercase">Thèse</span>
+                            <p class="text-base font-black text-white mt-1">Jugurtha, un redoutable chef de guerre.</p>
+                        </div>
+                        <div class="md:col-span-8 bg-slate-900/90 border border-slate-700 p-4 rounded-2xl space-y-2 text-xs">
+                            <span class="text-xs font-black text-emerald-400 uppercase">Arguments</span>
+                            <p class="text-slate-200">• Il fait <strong>d'abord</strong> occuper la montagne pour empêcher l'ennemi d'y retourner.</p>
+                            <p class="text-slate-200">• Il ordonne à ses cavaliers de fuir dans des directions opposées pour les <strong>attaquer ensuite en les encerclant</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-slate-900/90 border-t border-slate-800 px-8 py-3 z-20">
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-xs text-slate-400">Diapositive <strong id="l2-cur" class="text-amber-400">1</strong> / <span id="l2-tot">5</span></span>
+                <span class="text-xs text-slate-400">Fleches (◄ / ►) OK (Valider)</span>
+            </div>
+            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div id="l2-progress" class="bg-gradient-to-r from-amber-500 to-red-500 h-full transition-all duration-300"></div>
+            </div>
+        </footer>
+    </div>
+
+
+    <!-- Navigation & State Controller Script -->
+    <script>
+        let currentLessonId = null;
+        let slideStates = {
+            lesson1: 0,
+            lesson2: 0
+        };
+
+        const totalSlidesMap = {
+            lesson1: document.querySelectorAll('#lesson1 .slide').length,
+            lesson2: document.querySelectorAll('#lesson2 .slide').length
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('l1-tot').textContent = totalSlidesMap.lesson1;
+            document.getElementById('l2-tot').textContent = totalSlidesMap.lesson2;
+            setupRemoteNavigation();
+            focusPortalFirstItem();
+        });
+
+        function focusPortalFirstItem() {
+            const firstCard = document.querySelector('#mainPortal .focusable');
+            if (firstCard) focusElement(firstCard);
+        }
+
+        function launchLesson(lessonId) {
+            currentLessonId = lessonId;
+            document.getElementById('mainPortal').style.display = 'none';
+
+            document.querySelectorAll('.lesson-container').forEach(c => c.classList.remove('active-lesson'));
+            const activeContainer = document.getElementById(lessonId);
+            activeContainer.classList.add('active-lesson');
+
+            updateSlideView(lessonId);
+        }
+
+        function returnToPortal() {
+            document.querySelectorAll('.lesson-container').forEach(c => c.classList.remove('active-lesson'));
+            document.getElementById('mainPortal').style.display = 'flex';
+            currentLessonId = null;
+            setTimeout(focusPortalFirstItem, 50);
+        }
+
+        function changeSlide(lessonId, direction) {
+            let nextIndex = slideStates[lessonId] + direction;
+            if (nextIndex >= 0 && nextIndex < totalSlidesMap[lessonId]) {
+                slideStates[lessonId] = nextIndex;
+                updateSlideView(lessonId);
+            }
+        }
+
+        function updateSlideView(lessonId) {
+            const container = document.getElementById(lessonId);
+            const slides = container.querySelectorAll('.slide');
+            const curIdx = slideStates[lessonId];
+
+            slides.forEach((slide, idx) => {
+                if (idx === curIdx) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            // Update footer metrics
+            if (lessonId === 'lesson1') {
+                document.getElementById('l1-cur').textContent = curIdx + 1;
+                document.getElementById('l1-progress').style.width = `${((curIdx + 1) / totalSlidesMap.lesson1) * 100}%`;
+            } else if (lessonId === 'lesson2') {
+                document.getElementById('l2-cur').textContent = curIdx + 1;
+                document.getElementById('l2-progress').style.width = `${((curIdx + 1) / totalSlidesMap.lesson2) * 100}%`;
+            }
+
+            setTimeout(() => focusFirstElementInSlide(container), 50);
+        }
+
+        function focusFirstElementInSlide(container) {
+            const activeSlide = container.querySelector('.slide.active');
+            if (!activeSlide) return;
+
+            const focusable = activeSlide.querySelector('.focusable');
+            if (focusable) {
+                focusElement(focusable);
+            } else {
+                const headerBtn = container.querySelector('header .focusable');
+                if (headerBtn) focusElement(headerBtn);
+            }
+        }
+
+        function focusElement(elem) {
+            if (!elem) return;
+            document.querySelectorAll('.remote-focused').forEach(el => el.classList.remove('remote-focused'));
+            elem.focus();
+            elem.classList.add('remote-focused');
+        }
+
+        function checkAnswer(selectedBtn, isCorrect, feedbackId) {
+            const feedback = document.getElementById(feedbackId + '-feedback');
+            if (feedback) feedback.classList.remove('hidden');
+
+            if (isCorrect) {
+                selectedBtn.classList.add('bg-emerald-600', 'border-emerald-400', 'text-white');
+                if (feedback) {
+                    feedback.className = "p-2 rounded-xl text-xs font-bold text-center bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 mt-2";
+                    feedback.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i> Bravo ! C\'est la bonne réponse.';
+                }
+            } else {
+                selectedBtn.classList.add('bg-rose-600', 'border-rose-400', 'text-white');
+                if (feedback) {
+                    feedback.className = "p-2 rounded-xl text-xs font-bold text-center bg-rose-500/20 text-rose-300 border border-rose-500/40 mt-2";
+                    feedback.innerHTML = '<i class="fa-solid fa-circle-xmark mr-2"></i> Réponse incorrecte. Réessayez !';
+                }
+            }
+        }
+
+        function setupRemoteNavigation() {
+            document.addEventListener('keydown', function(e) {
+                let focusableElements = [];
+
+                if (!currentLessonId) {
+                    // We are in Main Portal
+                    focusableElements = Array.from(document.querySelectorAll('#mainPortal .focusable'));
+                } else {
+                    // We are inside a lesson
+                    const container = document.getElementById(currentLessonId);
+                    const activeSlide = container.querySelector('.slide.active');
+                    const headerFocusables = Array.from(container.querySelectorAll('header .focusable'));
+                    const slideFocusables = activeSlide ? Array.from(activeSlide.querySelectorAll('.focusable')) : [];
+                    focusableElements = [...headerFocusables, ...slideFocusables];
+                }
+
+                let currentFocused = document.activeElement;
+                let currentIndex = focusableElements.indexOf(currentFocused);
+
+                switch(e.key) {
+                    case 'ArrowRight':
+                        if (currentLessonId) {
+                            if (currentIndex === -1 || currentIndex === focusableElements.length - 1) {
+                                changeSlide(currentLessonId, 1);
+                            } else {
+                                focusElement(focusableElements[currentIndex + 1]);
+                            }
+                        } else {
+                            if (currentIndex < focusableElements.length - 1) {
+                                focusElement(focusableElements[currentIndex + 1]);
+                            }
+                        }
+                        e.preventDefault();
+                        break;
+
+                    case 'ArrowLeft':
+                        if (currentLessonId) {
+                            if (currentIndex <= 0) {
+                                changeSlide(currentLessonId, -1);
+                            } else {
+                                focusElement(focusableElements[currentIndex - 1]);
+                            }
+                        } else {
+                            if (currentIndex > 0) {
+                                focusElement(focusableElements[currentIndex - 1]);
+                            }
+                        }
+                        e.preventDefault();
+                        break;
+
+                    case 'ArrowDown':
+                        if (currentIndex < focusableElements.length - 1) {
+                            focusElement(focusableElements[currentIndex + 1]);
+                        }
+                        e.preventDefault();
+                        break;
+
+                    case 'ArrowUp':
+                        if (currentIndex > 0) {
+                            focusElement(focusableElements[currentIndex - 1]);
+                        }
+                        e.preventDefault();
+                        break;
+
+                    case 'Enter':
+                    case ' ':
+                        if (currentFocused && typeof currentFocused.click === 'function') {
+                            currentFocused.click();
+                        }
+                        e.preventDefault();
+                        break;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
