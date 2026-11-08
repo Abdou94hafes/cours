@@ -1,791 +1,295 @@
 <!DOCTYPE html>
-<html lang="fr" dir="ltr">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4AM Séquence 2 - Plateforme Éducative</title>
-    <style>
-        /* CSS الأساسي المتوافق مع الشاشات والمعالجات القديمة */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-
-        body {
-            background-color: #0f172a;
-            color: #ffffff;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            overflow: hidden;
-        }
-
-        /* المؤشر البصري البارز للريموت كنترول */
-        .focusable {
-            outline: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .focusable:focus, .focusable.remote-focused {
-            outline: 5px solid #f59e0b !important;
-            border-color: #f59e0b !important;
-            background-color: #1e293b !important;
-            box-shadow: 0 0 15px #f59e0b;
-        }
-
-        /* الهيدر والعناوين */
-        header {
-            background-color: #1e293b;
-            border-bottom: 3px solid #334155;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #ffffff;
-        }
-
-        .header-subtitle {
-            font-size: 13px;
-            color: #f59e0b;
-        }
-
-        .btn {
-            background-color: #334155;
-            color: #ffffff;
-            border: 2px solid #475569;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .btn-accent {
-            background-color: #d97706;
-            color: #ffffff;
-            border-color: #f59e0b;
-        }
-
-        .btn-success {
-            background-color: #059669;
-            color: #ffffff;
-            border-color: #10b981;
-        }
-
-        /* نظام الدروس والشرائح */
-        main {
-            flex: 1;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .lesson-container {
-            display: none;
-            width: 100%;
-            height: 100%;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .lesson-container.active-lesson {
-            display: flex;
-        }
-
-        .slide {
-            display: none;
-            width: 100%;
-            height: 100%;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .slide.active {
-            display: flex;
-        }
-
-        /* الكروت والحاويات */
-        .card {
-            background-color: #1e293b;
-            border: 2px solid #334155;
-            border-radius: 12px;
-            padding: 15px;
-            width: 100%;
-        }
-
-        .card-amber { border-left: 6px solid #f59e0b; }
-        .card-emerald { border-left: 6px solid #10b981; }
-        .card-blue { border-left: 6px solid #3b82f6; }
-
-        /* الشبكات والتقسيم */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            width: 100%;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
-            width: 100%;
-        }
-
-        /* البوابة الرئيسية (Main Portal) */
-        #mainPortal {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 100%;
-            width: 100%;
-            padding: 20px;
-        }
-
-        .portal-header {
-            background-color: #1e293b;
-            padding: 15px;
-            border-radius: 12px;
-            border: 2px solid #334155;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .portal-card {
-            background-color: #1e293b;
-            border: 3px solid #334155;
-            border-radius: 16px;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 15px;
-        }
-
-        /* نصوص العرض */
-        .title-large { font-size: 32px; font-weight: bold; color: #f59e0b; text-align: center; }
-        .text-emerald { color: #34d399; font-weight: bold; }
-        .text-amber { color: #fbbf24; font-weight: bold; }
-        .text-white { color: #ffffff; }
-        .text-slate { color: #94a3b8; }
-
-        /* الفوتر وشريط التقدم */
-        footer {
-            background-color: #1e293b;
-            border-top: 2px solid #334155;
-            padding: 8px 20px;
-        }
-
-        .progress-bar-bg {
-            background-color: #334155;
-            height: 8px;
-            border-radius: 4px;
-            width: 100%;
-            margin-top: 5px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            background-color: #f59e0b;
-            height: 100%;
-            width: 0%;
-            transition: width 0.3s;
-        }
-
-        .text-box {
-            background-color: #0f172a;
-            border: 1px solid #334155;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            background-color: #334155;
-            color: #f59e0b;
-        }
-
-        .tag {
-            display: inline-block;
-            background-color: #0f172a;
-            border: 1px solid #334155;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            margin: 2px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4AM Séquence 02 - Gloire à nos ancêtres</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;-webkit-user-select:none;user-select:none}
+html,body{height:100%}
+body{background:#fff;color:#000;display:flex;flex-direction:column;overflow:hidden;font-size:26px}
+.flag{height:.35em;background:linear-gradient(90deg,#00853f 33%,#fff 33%,#fff 66%,#d21034 66%);border-bottom:1px solid #000}
+header{background:#fff;border-bottom:.12em solid #000;padding:.3em .9em;display:flex;align-items:center;justify-content:space-between}
+.ht{font-weight:900;font-size:1em;color:#000}.hs{color:#0a6b3a;font-weight:800;font-size:.8em}
+main{flex:1;min-height:0;position:relative;padding:.4em .9em}
+.v{display:none;height:100%}.v.on{display:block}
+.slide{display:none;height:100%;flex-direction:column;justify-content:flex-start;align-items:center;overflow-y:auto;overflow-x:hidden}
+.slide>*:first-child{margin-top:auto}.slide>*:last-child{margin-bottom:auto}
+.slide.on{display:flex}
+h1{font-size:1.9em;color:#000;text-align:center;line-height:1.2;margin:.15em 0;border-bottom:.1em solid #0a6b3a;padding-bottom:.1em}
+h2{font-size:1.25em;color:#000;margin:.1em 0 .35em;text-align:center;border-bottom:.1em solid #0a6b3a;padding:0 .8em .1em}
+.card{background:#f3f6f4;border:.07em solid #000;border-radius:.6em;padding:.6em .8em;margin:.25em;width:100%;max-width:62em}
+.cy{border-left:.45em solid #e0a000}.cg{border-left:.45em solid #0a6b3a}.cr{border-left:.45em solid #d21034}
+.row{display:flex;width:100%;max-width:62em}.col{flex:1;margin:0 .2em}.col .card{margin:.2em 0;max-width:none}
+.g{color:#0a6b3a;font-weight:800}.y{color:#8a4b00;font-weight:800}.r{color:#c0152f;font-weight:800}.s{color:#222;font-weight:600}.w{color:#000;font-weight:700}
+.sm{font-size:.8em}.c{text-align:center}.big{font-size:1.5em}
+.box{background:#fff;border:.07em solid #000;border-radius:.5em;padding:.5em .7em;line-height:1.6;margin-top:.2em}
+.badge{display:inline-block;border:.08em solid #000;border-radius:1em;padding:.1em .8em;font-size:.7em;font-weight:900;color:#000;background:#ffd54a}
+.b{background:#fff;color:#000;border:.12em solid #000;border-radius:.5em;padding:.3em .8em;font-size:1em;font-weight:900;margin:.15em;cursor:pointer}
+.b.go{background:#ffd54a}
+.f{outline:none;cursor:pointer}
+.f:focus,.rf{outline:.18em solid #000;background-color:#ffe566;box-shadow:0 0 0 .32em #ffb000}
+.ok{background:#b9efc9 !important;border-color:#0a6b3a !important}
+.ko{background:#ffc2c9 !important;border-color:#c0152f !important}
+.q{font-size:1.15em;font-weight:800;line-height:1.5;text-align:center;margin:.3em 0;color:#000}
+.bl{display:inline-block;min-width:3.5em;border-bottom:.1em dashed #000;color:#0a6b3a;font-weight:900;text-align:center}
+.opts{display:flex;flex-wrap:wrap;justify-content:center}.opts .b{min-width:30%}
+.fb{min-height:1.4em;text-align:center;font-weight:900;color:#8a4b00}
+.ans div{background:#b9efc9;border-left:.3em solid #0a6b3a;border-radius:.4em;padding:.3em .6em;margin:.15em 0;font-weight:700}
+.pool .b{display:block;width:100%;text-align:left;font-size:.9em}
+.vw{width:48%;display:inline-block;vertical-align:top;margin:.15em .5%}
+.d{display:none;margin-top:.2em;font-size:.85em}.vw.open .d{display:block}
+.node{background:#ffd54a;color:#000;border:.1em solid #000;border-radius:.6em;padding:.5em .7em;font-weight:900;text-align:center}
+.node2{background:#fff;color:#0a6b3a;border:.1em solid #0a6b3a;border-radius:.6em;padding:.5em .6em;font-weight:800;text-align:center}
+.br{background:#fff;border:.1em solid #000;border-radius:.5em;padding:.3em .6em;margin:.2em 0}
+.arr{font-size:1.4em;color:#000;margin:0 .3em}
+.circ{border:.14em solid #d21034;border-radius:1em;padding:0 .3em}
+.cl div{padding:.12em 0;border-bottom:1px dotted #777}
+footer{background:#fff;border-top:.1em solid #000;padding:.25em .9em}
+.fr{display:flex;align-items:center;justify-content:space-between}
+.pb{height:.35em;background:#ddd;border-radius:.2em;margin-top:.2em;overflow:hidden}
+.pf{height:100%;width:0;background:#0a6b3a}
+.fb2 .b{font-size:.7em;padding:.2em .6em}
+</style>
 </head>
 <body>
+<div class="flag"></div>
+<header>
+ <div><div class="ht">4AM - Séquence 02 : Gloire à nos ancêtres !</div><div class="hs" id="hs">Menu principal</div></div>
+ <div class="s sm c">Enseignant : HAFES Abdelatif<br>CEM « 1er Novembre 1954 » - El Ghicha</div>
+</header>
+<main>
+<!-- MENU -->
+<section class="v on" id="v0"><div class="slide on">
+ <h1>Choisis la leçon</h1>
+ <div class="row" style="max-width:52em">
+  <div class="col"><div class="card cg f" tabindex="0" onclick="go(3)" style="padding:1em">
+   <div class="g sm">ACTIVITÉ 01 • LECTURE</div><div class="big w" style="margin:.3em 0">Hommage à Didouche Mourad</div>
+   <div class="s sm">Lecture chronométrée, vocabulaire, remise en ordre et quiz.</div></div></div>
+  <div class="col"><div class="card cy f" tabindex="0" onclick="go(4)" style="padding:1em">
+   <div class="y sm">ACTIVITÉ 02 • VOCABULAIRE</div><div class="big w" style="margin:.3em 0">Les connecteurs d'énumération</div>
+   <div class="s sm">Observation, schéma, jeux de tri et production écrite (p. 33-34).</div></div></div>
+ </div>
+</div></section>
 
-    <!-- ==================== MAIN PORTAL / HOME ==================== -->
-    <div id="mainPortal">
-        <div class="portal-header">
-            <div>
-                <h1 style="font-size: 22px; color: #ffffff;">Plateforme Éducative de Français</h1>
-                <p class="text-amber" style="font-size: 14px;">4ème Année Moyenne (4AM) • Séquence 02 : Gloire à nos ancêtres !</p>
-            </div>
-            <div style="text-align: right;">
-                <p class="text-amber" style="font-size: 16px;">Enseignant : HAFES Abdelatif</p>
-                <p class="text-slate" style="font-size: 13px;">Collège : 1er novembre 1954</p>
-            </div>
-        </div>
+<!-- LECON 3 -->
+<section class="v" id="v3">
+ <div class="slide">
+  <span class="badge">ACTIVITÉ : LECTURE ENTRAÎNEMENT</span><h1>Hommage à Didouche Mourad</h1>
+  <div class="row"><div class="col"><div class="card cy"><div class="y sm">Enseignant</div><div class="w">HAFES Abdelatif</div><div class="s sm">1er novembre 1954</div></div></div>
+  <div class="col"><div class="card cg"><div class="g sm">Objectifs</div><div class="w sm">• Développer la compétence de lecture.<br>• Augmenter la vitesse et la fluidité.</div></div></div>
+  <div class="col"><div class="card cr"><div class="r sm">Support</div><div class="w sm">APS, mardi 17 janvier 2023<br>Tableau, livre.</div></div></div></div>
+ </div>
+ <div class="slide">
+  <h2 class="y">Texte : Hommage à Didouche Mourad</h2>
+  <div class="card cy" id="txt" style="background:#fff;line-height:1.55;text-align:justify;font-size:.88em">
+   <p><b class="y">Didouche Mourad</b>, un des architectes de la glorieuse révolution de libération nationale, tombé au champ d'honneur le 18 janvier 1955 dans la wilaya de Constantine, avait une force de persuasion qui lui permettait de « mieux mobiliser » contre le colonisateur français, selon des témoignages recueillis mardi par l'APS auprès d'historiens et de moudjahidine.</p>
+   <p style="margin-top:.3em"><b class="y"><u>D'abord</u></b>, chef de la zone 2. Didouche Mourad, membre du groupe des 6 historiques ayant préparé le déclenchement de la Révolution libératrice du 1er novembre 1954, était réputé pour son haut sens de conviction nourri par son amour de la patrie, a indiqué Dr Abdallah.</p>
+   <p style="margin-top:.3em"><b class="y"><u>Ensuite</u></b>, se basant sur ses recherches sur la vie et le parcours révolutionnaire du Chahid, Dr Moussaoui a affirmé que c'est Didouche qui avait convaincu Ali Mendjeli, une grande figure de la lutte de libération nationale, à rejoindre le projet révolutionnaire de l'Algérie.</p>
+   <p style="margin-top:.3em"><b class="y"><u>Enfin</u></b>, bien imprégné des données du terrain, car engagé corps et âme pour la cause nationale, le chahid Didouche Mourad usait d'un discours fondé et entraînant.</p>
+  </div>
+  <div class="fr" style="width:100%;max-width:62em">
+   <button class="b go f" id="rb" onclick="reading()">Démarrer la lecture</button>
+   <div class="y" id="rres">Chrono : 0 s</div>
+  </div>
+ </div>
+ <div class="slide">
+  <h2>Mise en train & éléments périphériques</h2>
+  <div class="row"><div class="col"><div class="card cy"><div class="y">Mise en train :</div><div class="w">Connaissez-vous quelques noms de moudjahidine ?</div><div class="box g">► Larbi Ben M'hidi / Didouche Mourad / Krim Belkacem</div></div></div>
+  <div class="col"><div class="card cg"><div class="g">Éléments périphériques :</div><div class="w sm">Quel est le titre de ce texte ?</div><div class="y sm">► Hommage à Didouche Mourad.</div><div class="w sm" style="margin-top:.3em">Quelle est la source du texte ?</div><div class="y sm">► APS, mardi 17 janvier 2023.</div></div></div></div>
+ </div>
+ <div class="slide"><h2 class="y">Mots à retenir (appuie sur OK pour voir le sens)</h2><div id="voc" style="width:100%;max-width:62em"></div></div>
+ <div class="slide">
+  <h2>Exploitation du texte & synthèse</h2>
+  <div class="row"><div class="col"><div class="card cg"><div class="g">Exploitation :</div><div class="w sm">1) L'auteur de ce texte :</div><div class="y sm">► a- décrit</div><div class="w sm" style="margin-top:.3em">2) L'auteur de ce texte :</div><div class="y sm">► Met en valeur un héros algérien</div></div></div>
+  <div class="col"><div class="card cr"><div class="r">Synthèse :</div><div class="box sm">« J'ai senti que nos ancêtres ont refusé la colonisation française. Ils ont fait beaucoup de sacrifices pour que nous vivions libres. Nous ne pouvons qu'être fiers et reconnaissants. »</div></div></div></div>
+ </div>
+ <div class="slide" id="o3"></div>
+ <div class="slide" id="q3"></div>
+</section>
 
-        <div style="margin: auto 0; text-align: center;">
-            <p class="badge" style="margin-bottom: 15px;">Sélectionnez la leçon à présenter sur le Data Show</p>
-            <h2 class="title-large" style="margin-bottom: 25px;">Module de Français • Séquence 2</h2>
+<!-- LECON 4 -->
+<section class="v" id="v4">
+ <div class="slide">
+  <span class="badge">ACTIVITÉ : VOCABULAIRE</span><h1>Les connecteurs d'énumération</h1>
+  <div class="row"><div class="col"><div class="card cy"><div class="y sm">Enseignant</div><div class="w">HAFES Abdelatif</div><div class="s sm">1er novembre 1954</div></div></div>
+  <div class="col"><div class="card cg"><div class="g sm">Objectifs</div><div class="w sm">• Identifier et employer les connecteurs d'énumération.<br>• Identifier leur fonction dans un contexte.</div></div></div>
+  <div class="col"><div class="card cr"><div class="r sm">Support</div><div class="w sm">Texte adapté.<br>Tableau, livre, ardoise.</div></div></div></div>
+ </div>
+ <div class="slide">
+  <h2 class="y">Texte d'observation</h2>
+  <div class="card cy"><div class="g sm">Mise en train : Quels sont les plus beaux sites qui attirent les touristes en Algérie ?</div>
+  <div class="box" style="font-size:.9em;line-height:1.7">Je pense qu'à travers son histoire, l'Algérie vit des hauts et bas. J'espère que les nouvelles générations s'intéressent à cela.<br>
+   <b class="r">D'abord</b>, l'Algérie connait la civilisation.<br><b class="r">Ensuite</b>, elle s'épanouit avec l'avènement de l'islam.<br><b class="r">Puis</b>, El Emir Abdelkader fonde l'Algérie moderne.<br><b class="r">Ainsi</b>, après 130 ans de la colonisation française l'Algérie arrache son indépendance en 1962.<br>Pour cela, il faut que nous soyons fiers de notre passé pour pouvoir bâtir un avenir meilleur.</div></div>
+ </div>
+ <div class="slide">
+  <h2>Phase d'observation & d'analyse</h2>
+  <div class="row"><div class="col"><div class="card cy"><div class="y">Observation :</div>
+   <div class="s sm">1) Quel est le sujet ?</div><div class="g sm">► La richesse civilisationnelle de l'Algérie.</div>
+   <div class="s sm" style="margin-top:.3em">2) Quelle est la thèse ?</div><div class="g sm">► À travers son histoire, l'Algérie vit des hauts et des bas.</div>
+   <div class="s sm" style="margin-top:.3em">3) Combien d'arguments ?</div><div class="g sm">► 4 arguments.</div></div></div>
+  <div class="col"><div class="card cg"><div class="g">Analyse :</div>
+   <div class="s sm">1) Par quels mots introduit-il ses arguments ?</div><div class="y sm">► D'abord, ensuite, puis, ainsi.</div>
+   <div class="s sm" style="margin-top:.3em">2) Comment appelle-t-on ces mots ?</div><div class="y sm">► Des connecteurs d'énumération.</div>
+   <div class="s sm" style="margin-top:.3em">3) Quel est leur rôle ?</div><div class="y sm">► Classer, lister, énumérer et assurer la cohérence du texte.</div></div></div></div>
+ </div>
+ <div class="slide">
+  <h2 class="y">Phase de structuration (schéma)</h2>
+  <div style="display:flex;align-items:center;width:100%;max-width:62em">
+   <div class="node">Connecteur<br>d'énumération</div><div class="arr">►</div>
+   <div class="node2">Énumérer,<br>classer, lister</div><div class="arr">►</div>
+   <div style="flex:1">
+    <div class="br" style="border-color:#0a6b3a"><b class="g sm">1er argument :</b><div class="sm w">premièrement, d'abord, tout d'abord, en premier lieu, d'une part...</div></div>
+    <div class="br" style="border-color:#0b3d91"><b class="sm" style="color:#0b3d91">2e argument :</b><div class="sm w">en second lieu, d'autre part, en outre, ensuite, de même, encore, aussi, puis...</div></div>
+    <div class="br" style="border-color:#b34700"><b class="sm" style="color:#b34700">Dernier argument :</b><div class="sm w">enfin, en dernier lieu...</div></div>
+   </div></div>
+  <div class="g sm c" style="margin-top:.3em">N.B : les arguments sont illustrés par des exemples introduits par : ainsi, par exemple, notamment, entre autres, comme, en effet...</div>
+ </div>
+ <div class="slide" id="a1"></div>
+ <div class="slide" id="a2"></div>
+ <div class="slide">
+  <h2>Activité 02 p. 33 : entoure les connecteurs</h2>
+  <div class="card cg"><div class="box sm" style="line-height:1.9" id="ent">
+   • <b class="y">Argument 1 :</b> <span class="cn">D'abord</span>, cela me permettait de vivre deux semaines avec mes grands-parents.<br>
+   • <b class="y">Argument 2 :</b> <span class="cn">Ensuite</span>, ces vacances étaient l'occasion de longues discussions avec mon oncle...<br>
+   • <b class="y">Argument 3 :</b> <span class="cn">Enfin</span>, lorsque l'hiver était rigoureux...</div>
+   <div class="c"><button class="b go f" onclick="circle()">Correction : entourer les connecteurs</button></div></div>
+ </div>
+ <div class="slide" id="o4"></div>
+ <div class="slide">
+  <h2>Dépassement : production écrite</h2>
+  <div class="card cr"><div class="r">Sujet : écris un court paragraphe...</div>
+   <div class="s sm">« ...il est important de connaitre l'histoire de son pays l'Algérie... »</div>
+   <div class="g sm" style="margin-top:.3em">Banque de mots : d'abord • ensuite • puis • enfin • en dernier lieu • par exemple</div></div>
+  <div class="card cy c"><div class="big y" id="tm">5:00</div>
+   <button class="b go f" id="tb" onclick="wtimer()">Démarrer</button><button class="b f" onclick="wreset()">Remettre à 5:00</button><button class="b f" onclick="mod()">Correction : paragraphe modèle</button></div>
+  <div class="box sm" id="mod" style="display:none;max-width:62em;line-height:1.6">Il est important de connaitre l'histoire de son pays.<br><b class="r">D'abord</b>, il faut se familiariser avec l'histoire de son pays afin de mieux comprendre sa culture et identité.<br><b class="r">Ensuite</b>, l'Algérie a connu de nombreux évènements historiques qui ont façonné son passé et son présent.<br><b class="r">Enfin</b>, apprendre sur ces fruits peut aider à comprendre les problèmes actuels et à favoriser l'appréciation de la richesse culturelle de l'Algérie.</div>
+ </div>
+</section>
+</main>
+<footer>
+ <div class="fr">
+  <div class="fb2"><button class="b f" onclick="go(0)">≡ Menu</button><button class="b f" onclick="zm(-2)">A -</button><button class="b f" onclick="zm(2)">A +</button></div>
+  <div class="s sm"><b class="y" id="nm"></b></div>
+  <div class="fb2"><button class="b f" id="pv" onclick="flip(-1)">◄ Précédent</button><button class="b go f" id="nx" onclick="flip(1)">Suivant ►</button></div>
+ </div>
+ <div class="pb"><div class="pf" id="pf"></div></div>
+</footer>
 
-            <div class="grid-2" style="max-width: 900px; margin: 0 auto;">
-                <!-- Lesson 1 Card -->
-                <div onclick="launchLesson('lesson1')" class="focusable portal-card card-emerald">
-                    <div>
-                        <span class="badge" style="color: #34d399;">SÉANCE 01 (5 الشرائح)</span>
-                        <h3 class="text-white" style="font-size: 22px; margin: 10px 0;">Production de l'oral</h3>
-                        <p class="text-amber" style="font-size: 16px;">L'émir Abdelkader</p>
-                        <p class="text-slate" style="font-size: 13px; margin-top: 8px;">Mise en train, analyse du document (p.29), Boîte à mots, exercices interactifs et récapitulation orale.</p>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                        <span class="text-slate" style="font-size: 12px;">Manuel p. 29</span>
-                        <button class="btn btn-success">Lancer Leçon 1 ►</button>
-                    </div>
-                </div>
+<script>
+var cur=0,sl=[],idx=0,zoom=0,tmr=0,rt=0,rs=0,wt=0,ws=300;
+function $(i){return document.getElementById(i)}
+function all(q,r){return Array.prototype.slice.call((r||document).querySelectorAll(q))}
+function shuf(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function vis(e){return e.offsetWidth>0&&e.offsetHeight>0}
+function foc(e){if(!e)return;all('.rf').forEach(function(x){x.classList.remove('rf')});e.focus();e.classList.add('rf')}
+function bsz(){return Math.max(14,Math.round(Math.min(window.innerWidth/50,window.innerHeight/27)))}
+function fit(){var s=sl[idx];if(!s)return;var f=bsz();document.body.style.fontSize=f+'px';
+ while((s.scrollHeight>s.clientHeight+2||s.scrollWidth>s.clientWidth+2)&&f>12){f--;document.body.style.fontSize=f+'px'}
+ document.body.style.fontSize=(f+zoom)+'px'}
+function mod(){var m=$('mod');m.style.display=m.style.display==='block'?'none':'block';fit();if(m.style.display==='block')m.scrollIntoView()}
+function zm(d){zoom+=d;if(zoom<-8)zoom=-8;if(zoom>18)zoom=18;fit()}
+var TT={3:'Activité 01 • Hommage à Didouche Mourad',4:"Activité 02 • Les connecteurs d'énumération"};
+function go(n){cur=n;all('.v').forEach(function(v){v.classList.remove('on')});$('v'+n).classList.add('on');
+ sl=all('.slide',$('v'+n));idx=0;$('hs').textContent=n?TT[n]:'Menu principal';show()}
+function flip(d){if(!cur)return;var n=idx+d;if(n>=0&&n<sl.length){idx=n;show()}}
+function show(){sl.forEach(function(s,i){if(i===idx)s.classList.add('on');else s.classList.remove('on')});
+ $('nm').textContent=cur?('Leçon 0'+(cur-2)+'  •  '+(idx+1)+' / '+sl.length):'';
+ $('pf').style.width=cur?((idx+1)/sl.length*100)+'%':'0%';fit();
+ setTimeout(function(){var f=all('.f',sl[idx]).filter(vis)[0];foc(f||$('nx'))},40)}
 
-                <!-- Lesson 2 Card -->
-                <div onclick="launchLesson('lesson2')" class="focusable portal-card card-amber">
-                    <div>
-                        <span class="badge" style="color: #fbbf24;">SÉANCE 02 (7 الشرائح)</span>
-                        <h3 class="text-white" style="font-size: 22px; margin: 10px 0;">Compréhension de l'écrit</h3>
-                        <p class="text-amber" style="font-size: 16px;">Jugurtha contre Metellus</p>
-                        <p class="text-slate" style="font-size: 13px; margin-top: 8px;">Mise en train, texte complet, questions 1 à 10, Vrai/Faux, tableau thèse & arguments et dépassement.</p>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                        <span class="text-slate" style="font-size: 12px;">Manuel p. 30</span>
-                        <button class="btn btn-accent">Lancer Leçon 2 ►</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+/* Navigation télécommande : navigation spatiale */
+function nav(d){var a=document.activeElement,L=all('.f',sl[idx]).concat(all('.f',document.querySelector('footer'))).filter(vis);
+ if(!a||L.indexOf(a)<0){foc(L[0]);return}
+ var r=a.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,best=null,bs=1e9;
+ L.forEach(function(e){if(e===a)return;var q=e.getBoundingClientRect(),dx=q.left+q.width/2-cx,dy=q.top+q.height/2-cy,p,o;
+  if(d==='r'){p=dx;o=Math.abs(dy)}else if(d==='l'){p=-dx;o=Math.abs(dy)}else if(d==='d'){p=dy;o=Math.abs(dx)}else{p=-dy;o=Math.abs(dx)}
+  if(p>3){var sc=p+o*2.5;if(sc<bs){bs=sc;best=e}}});
+ if(best)foc(best);else if(d==='u'||d==='d')sl[idx].scrollTop+=(d==='d'?140:-140);else if(d==='r'&&a.id==='nx')flip(1);else if(d==='l'&&a.id==='pv')flip(-1)}
+document.onkeydown=function(e){var k=e.keyCode,m={37:'l',38:'u',39:'r',40:'d'};
+ if(m[k]){nav(m[k]);e.preventDefault();return}
+ if(k===13||k===23||k===32){var a=document.activeElement;if(a&&a.click){a.click();e.preventDefault()}}
+ else if(k===34){flip(1);e.preventDefault()}else if(k===33){flip(-1);e.preventDefault()}
+ else if((k===27||k===4)&&cur){go(0);e.preventDefault()}};
+window.onresize=fit;
 
-        <div style="text-align: center; font-size: 12px; color: #64748b;">
-            التنقل بالريموت كنترول: الأسهم (◄ / ► / ▲ / ▼) للتنقل بين الأزرار، وزر OK للتأكيد
-        </div>
-    </div>
+/* Jeu de questions générique (QCM, trous, tri) */
+function Quiz(id,title,items,sh){var s=$(id),i=0,sc=0,tr=0,L;
+ var hd='<h2 class="y">'+title+'</h2>';
+ function corr(){var t='';items.forEach(function(q,n){t+='<div>'+(n+1)+') '+(q.c?q.c:q.q.replace('___','<b class="g">'+q.o[q.a]+'</b>')+(q.q.indexOf('___')<0?' <b class="g">→ '+q.o[q.a]+'</b>':''))+'</div>'});
+  s.innerHTML=hd+'<div class="card cg cl sm">'+t+'</div><div class="c"><button class="b go f" id="'+id+'b">Retour</button></div>';$(id+'b').onclick=draw;fit();foc($(id+'b'))}
+ function start(){L=sh?shuf(items.slice()):items;i=0;sc=0;draw()}
+ function draw(){
+  if(i>=L.length){s.innerHTML=hd+'<div class="card cg c"><div class="big y">Score : '+sc+' / '+L.length+'</div><div class="w">'+(sc===L.length?'Bravo, sans faute !':'Courage, on rejoue pour progresser ?')+'</div><button class="b go f" id="'+id+'r">Rejouer</button><button class="b f" id="'+id+'c">Voir la correction</button></div>';$(id+'c').onclick=corr;
+   $(id+'r').onclick=start;fit();foc($(id+'r'));return}
+  var q=L[i];tr=0;
+  s.innerHTML=hd+'<div class="card cy"><div class="s sm c">Question '+(i+1)+' / '+L.length+'</div><div class="q">'+q.q.replace('___','<span class="bl">&nbsp;?&nbsp;</span>')+'</div><div class="opts"></div><div class="fb"></div><div class="c"><button class="b f" id="'+id+'c">Voir la correction</button></div></div>';
+  $(id+'c').onclick=corr;
+  var box=s.querySelector('.opts'),fb=s.querySelector('.fb');
+  q.o.forEach(function(t,k){var b=document.createElement('button');b.className='b f';b.textContent=t;
+   b.onclick=function(){if(b.className.indexOf('ko')>-1||b.className.indexOf('ok')>-1)return;
+    if(k===q.a){b.className='b f ok';if(!tr)sc++;fb.textContent='Bravo !';var bl=s.querySelector('.bl');if(bl)bl.textContent=t;
+     setTimeout(function(){i++;draw()},1100)}
+    else{b.className='b f ko';tr++;fb.textContent='Pas tout à fait, essaie encore.'}};
+   box.appendChild(b)});
+  fit();foc(box.firstChild)}
+ start()}
 
+/* Remettre dans l'ordre */
+function Order(id,title,intro,P){var s=$(id);
+ function start(){var n=0;
+  s.innerHTML='<h2 class="y">'+title+'</h2><div class="card cr sm">'+intro+'</div><div class="card cg"><div class="ans"></div><div class="fb"></div></div><div class="pool" style="width:100%;max-width:62em"></div>';
+  var an=s.querySelector('.ans'),pl=s.querySelector('.pool'),fb=s.querySelector('.fb');
+  shuf(P.slice()).forEach(function(t){var b=document.createElement('button');b.className='b f';b.textContent=t;
+   b.onclick=function(){if(t===P[n]){var d=document.createElement('div');d.textContent=t;an.appendChild(d);n++;
+     var nx=b.nextSibling||b.previousSibling;pl.removeChild(b);
+     if(n===P.length){pl.innerHTML='';fb.textContent='Bravo ! Le texte est reconstitué.';var r=document.createElement('button');r.className='b go f';r.textContent='Rejouer';r.onclick=start;pl.appendChild(r);fit();foc(r)}
+     else{fit();foc(nx)}}
+    else{b.className='b f ko';setTimeout(function(){b.className='b f'},700);fb.textContent='Ce n\'est pas encore la bonne phrase.'}};
+   pl.appendChild(b)});
+  var cb=document.createElement('button');cb.className='b f';cb.textContent='Voir la correction';
+  cb.onclick=function(){an.innerHTML='';P.forEach(function(t){var d=document.createElement('div');d.textContent=t;an.appendChild(d)});pl.innerHTML='';fb.textContent='Correction affichée.';var r=document.createElement('button');r.className='b go f';r.textContent='Rejouer';r.onclick=start;pl.appendChild(r);fit();foc(r)};
+  pl.appendChild(cb);
+  fit();var sh=s.className.indexOf('on')>-1;if(sh)foc(pl.firstChild)}
+ start()}
 
-    <!-- ==================== LESSON 1: PRODUCTION DE L'ORAL ==================== -->
-    <div id="lesson1" class="lesson-container">
-        <header>
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <button onclick="returnToPortal()" class="focusable btn">◄ Accueil</button>
-                <div>
-                    <div class="header-title">Production de l'oral : L'émir Abdelkader</div>
-                    <div class="header-subtitle">Manuel scolaire p. 29</div>
-                </div>
-            </div>
-            <div>
-                <button onclick="changeSlide('lesson1', -1)" class="focusable btn">◄ Précédent</button>
-                <button onclick="changeSlide('lesson1', 1)" class="focusable btn btn-accent">Suivant ►</button>
-            </div>
-        </header>
+/* Vocabulaire */
+function Vocab(id,W){var c=$(id);W.forEach(function(w){var d=document.createElement('div');d.className='card cy f vw';d.tabIndex=0;
+ d.innerHTML='<b class="y">'+w[0]+'</b><div class="d g">'+w[1]+'</div>';d.onclick=function(){d.classList.toggle('open');fit()};c.appendChild(d)})}
 
-        <main>
-            <!-- L1-Slide 1 -->
-            <section class="slide active">
-                <span class="badge">Tâche 1 : Rédiger un texte descriptif à visée argumentative</span>
-                <h1 class="title-large">Production de l'oral : L'émir Abdelkader</h1>
-                <p class="text-slate" style="text-align: center; max-width: 700px;">« Formuler des arguments pour appuyer un point de vue par rapport à une situation de communication »</p>
+/* Chrono de lecture : mots par minute */
+function reading(){var b=$('rb');
+ if(!rt){rs=new Date().getTime();rt=setInterval(function(){$('rres').textContent='Chrono : '+Math.round((new Date().getTime()-rs)/1000)+' s'},300);b.textContent='Arrêter';}
+ else{clearInterval(rt);rt=0;var sec=Math.max(1,(new Date().getTime()-rs)/1000),w=$('txt').textContent.split(/\s+/).length;
+  $('rres').textContent=Math.round(sec)+' s  •  '+Math.round(w/sec*60)+' mots/min';b.textContent='Recommencer'}}
+/* Minuteur d'écriture */
+function fmt(s){var m=Math.floor(s/60),x=s%60;return m+':'+(x<10?'0':'')+x}
+function wtimer(){var b=$('tb');
+ if(wt){clearInterval(wt);wt=0;b.textContent='Reprendre';return}
+ b.textContent='Pause';wt=setInterval(function(){ws--;$('tm').textContent=fmt(ws);if(ws<=0){clearInterval(wt);wt=0;b.textContent='Temps écoulé !';ws=0}},1000)}
+function wreset(){clearInterval(wt);wt=0;ws=300;$('tm').textContent='5:00';$('tb').textContent='Démarrer'}
+function circle(){all('.cn',$('ent')).forEach(function(e){e.classList.add('circ','r')})}
 
-                <div class="grid-3" style="max-width: 900px; margin-top: 15px;">
-                    <div class="card card-amber">
-                        <div class="text-amber" style="font-size: 12px;">Enseignant & Collège</div>
-                        <div class="text-white" style="font-size: 16px; font-weight: bold;">HAFES Abdelatif</div>
-                        <div class="text-slate" style="font-size: 12px;">Collège : 1er novembre 1954</div>
-                    </div>
-                    <div class="card card-emerald">
-                        <div class="text-emerald" style="font-size: 12px;">Objectifs pédagogiques</div>
-                        <div class="text-white" style="font-size: 12px;">• Construire du sens à partir d'un document iconique.<br>• Formuler des arguments solides.</div>
-                    </div>
-                    <div class="card card-blue">
-                        <div class="text-amber" style="font-size: 12px;">Support & Matériel</div>
-                        <div class="text-white" style="font-size: 12px;">Manuel p. 29 (Bataille de la Macta)<br>Matériel : Tableau, Data show</div>
-                    </div>
-                </div>
-
-                <button onclick="changeSlide('lesson1', 1)" class="focusable btn btn-accent" style="margin-top: 15px; padding: 12px 24px; font-size: 16px;">Lancer l'activité ►</button>
-            </section>
-
-            <!-- L1-Slide 2 -->
-            <section class="slide">
-                <div class="grid-2" style="align-items: center;">
-                    <div style="text-align: center;">
-                        <img src="img51.jpg" alt="Bataille de la Macta" style="width: 100%; max-height: 280px; border-radius: 12px; border: 3px solid #334155;" onerror="this.onerror=null; this.src='https://placehold.co/600x350/1e293b/f59e0b?text=Bataille+de+la+Macta';">
-                        <p class="text-amber" style="font-size: 12px; margin-top: 5px;">Bataille de la Macta (28 juin 1835) • Hocine Ziani</p>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <div class="card card-amber">
-                            <h3 class="text-amber" style="font-size: 14px;">I. Mise en train : Qui est l'Émir Abdelkader ?</h3>
-                            <div class="text-box text-emerald" style="margin-top: 5px;">
-                                « L'Émir Abdelkader (1808-1883) fut un chef militaire et spirituel algérien, qui mena la résistance contre la colonisation française au 19ᵉ siècle. »
-                            </div>
-                        </div>
-                        <div class="card card-blue">
-                            <h3 class="text-white" style="font-size: 14px;">II. Observation du tableau (p. 29) :</h3>
-                            <p class="text-slate" style="font-size: 12px; margin-top: 5px;">• Observez attentivement la peinture ci-contre :</p>
-                            <p class="text-slate" style="font-size: 12px;">• <strong class="text-amber">Que représente le personnage au centre ?</strong> (Sur son cheval, le bras levé)</p>
-                            <p class="text-slate" style="font-size: 12px;">• <strong class="text-amber">Quelle est l'atmosphère du combat ?</strong> (Fumée, canons, affrontements)</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- L1-Slide 3 -->
-            <section class="slide">
-                <h2 class="text-white" style="font-size: 20px; margin-bottom: 10px;">III. Analyse du document iconique (Questions 1 à 3)</h2>
-                <div class="grid-3">
-                    <div class="card card-amber">
-                        <h4 class="text-amber" style="font-size: 14px;">1) Que voyez-vous sur l'image ?</h4>
-                        <div class="text-box text-emerald" style="margin-top: 10px;">► C'est une illustration renvoyant à la bataille de Sidi Brahim / Hocine Ziani - la Macta.</div>
-                    </div>
-                    <div class="card card-amber">
-                        <h4 class="text-amber" style="font-size: 14px;">2) À quelle époque remonte-t-elle ?</h4>
-                        <div class="text-box text-emerald" style="margin-top: 10px;">► Elle remonte à l'époque coloniale (Le 28 juin 1934 / 19ᵉ siècle).</div>
-                    </div>
-                    <div class="card card-amber">
-                        <h4 class="text-amber" style="font-size: 14px;">3) Où est-ce qu'elle a eu lieu ?</h4>
-                        <div class="text-box text-emerald" style="margin-top: 10px;">► À l'ouest du pays (Région de la Macta / Sig).</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- L1-Slide 4 -->
-            <section class="slide">
-                <div class="grid-2">
-                    <div class="card card-blue">
-                        <h3 class="text-amber" style="font-size: 16px;">4) Description des différents plans :</h3>
-                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
-                            <div class="text-box"><strong>a. Au premier plan :</strong> <span class="text-emerald">Un soldat français à terre.</span></div>
-                            <div class="text-box"><strong>b. Au second plan :</strong> <span class="text-emerald">L'émir Abdelkader menant le combat.</span></div>
-                            <div class="text-box"><strong>c. À l'arrière-plan :</strong> <span class="text-emerald">Les troupes de l'émir Abdelkader harcelant l'ennemi.</span></div>
-                        </div>
-                    </div>
-                    <div class="card card-emerald">
-                        <h3 class="text-white" style="font-size: 16px;">5) Intention du peintre :</h3>
-                        <p class="text-slate" style="font-size: 13px; margin: 8px 0;">Le peintre veut que le personnage central paraisse :</p>
-                        <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <button onclick="checkAnswer(this, false, 'l1q5')" class="focusable btn">a) Fort</button>
-                            <button onclick="checkAnswer(this, false, 'l1q5')" class="focusable btn">b) Faible</button>
-                            <button onclick="checkAnswer(this, true, 'l1q5')" class="focusable btn">c) Courageux</button>
-                        </div>
-                        <div id="l1q5-feedback" style="margin-top: 10px; font-weight: bold; text-align: center;"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- L1-Slide 5 -->
-            <section class="slide">
-                <h2 class="text-white" style="font-size: 20px; margin-bottom: 5px;">IV. Expression libre & Récapitulation</h2>
-                <p class="text-slate" style="font-size: 12px; margin-bottom: 10px;">Boîte à mots et propositions d'expression pour motiver l'élève à parler :</p>
-
-                <div class="grid-3" style="margin-bottom: 10px;">
-                    <div class="card card-amber">
-                        <div class="text-amber" style="font-size: 12px; font-weight: bold;">Noms</div>
-                        <span class="tag text-amber">Un grand héros</span><span class="tag text-amber">Un chef militaire</span><span class="tag text-amber">La résistance</span>
-                    </div>
-                    <div class="card card-emerald">
-                        <div class="text-emerald" style="font-size: 12px; font-weight: bold;">Adjectifs</div>
-                        <span class="tag text-emerald">Courageux</span><span class="tag text-emerald">Intelligent</span><span class="tag text-emerald">Stratège</span>
-                    </div>
-                    <div class="card card-blue">
-                        <div class="text-amber" style="font-size: 12px; font-weight: bold;">Verbes</div>
-                        <span class="tag text-emerald">Combattre</span><span class="tag text-emerald">Défendre</span><span class="tag text-emerald">Mener</span>
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <div class="card card-amber">
-                        <h4 class="text-amber" style="font-size: 14px;">Propositions d'expression :</h4>
-                        <p class="text-slate" style="font-size: 12px; margin-top: 5px;">• <strong>À mon avis,</strong> l'Émir Abdelkader était un homme très courageux car il a défendu la patrie.</p>
-                        <p class="text-slate" style="font-size: 12px; margin-top: 3px;">• <strong>Selon moi,</strong> il est un exemple pour toutes les générations.</p>
-                    </div>
-                    <div class="card card-emerald">
-                        <h4 class="text-emerald" style="font-size: 14px;">Récapitulation (Synthèse) :</h4>
-                        <div class="text-box" style="margin-top: 5px; font-size: 12px;">
-                            « Abdelkader était un grand chef de guerre. <strong>D'abord</strong> il a combattu les Français avec beaucoup de bravoure. <strong>De plus</strong> il a réussi à rassembler beaucoup de soldats. Même ses ennemis le respectaient pour sa force et sa sagesse. »
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <footer>
-            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8;">
-                <span>Diapositive <strong id="l1-cur" class="text-amber">1</strong> / <span id="l1-tot">5</span></span>
-                <span>الريموت: الأسهم (◄ / ►) للتنقل | زر OK للتأكيد</span>
-            </div>
-            <div class="progress-bar-bg"><div id="l1-progress" class="progress-bar-fill"></div></div>
-        </footer>
-    </div>
-
-
-    <!-- ==================== LESSON 2: COMPRÉHENSION DE L'ÉCRIT ==================== -->
-    <div id="lesson2" class="lesson-container">
-        <header>
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <button onclick="returnToPortal()" class="focusable btn">◄ Accueil</button>
-                <div>
-                    <div class="header-title">Compréhension de l'écrit : Jugurtha contre Metellus</div>
-                    <div class="header-subtitle">Manuel scolaire p. 30</div>
-                </div>
-            </div>
-            <div>
-                <button onclick="changeSlide('lesson2', -1)" class="focusable btn">◄ Précédent</button>
-                <button onclick="changeSlide('lesson2', 1)" class="focusable btn btn-accent">Suivant ►</button>
-            </div>
-        </header>
-
-        <main>
-            <!-- L2-Slide 1 -->
-            <section class="slide active">
-                <span class="badge">Projet 1 • Tâche 1 : Mettre en valeur l'histoire de la Numidie</span>
-                <h1 class="title-large">Jugurtha contre Metellus</h1>
-                <p class="text-slate">« Produire des arguments pour étayer une thèse »</p>
-
-                <div class="grid-3" style="max-width: 900px; margin-top: 15px;">
-                    <div class="card card-amber">
-                        <div class="text-amber" style="font-size: 12px;">Enseignant & Collège</div>
-                        <div class="text-white" style="font-size: 16px; font-weight: bold;">HAFES Abdelatif</div>
-                        <div class="text-slate" style="font-size: 12px;">Collège : 1er novembre 1954</div>
-                    </div>
-                    <div class="card card-emerald">
-                        <div class="text-emerald" style="font-size: 12px;">Objectifs pédagogiques</div>
-                        <div class="text-white" style="font-size: 12px;">• Construire du sens à partir d'un document écrit.<br>• Identifier les arguments valorisant le héros.</div>
-                    </div>
-                    <div class="card card-blue">
-                        <div class="text-amber" style="font-size: 12px;">Support & Matériel</div>
-                        <div class="text-white" style="font-size: 12px;">Manuel p. 30 (Salluste)<br>Matériel : Tableau, Livre</div>
-                    </div>
-                </div>
-
-                <button onclick="changeSlide('lesson2', 1)" class="focusable btn btn-accent" style="margin-top: 15px; padding: 12px 24px; font-size: 16px;">Commencer la leçon ►</button>
-            </section>
-
-            <!-- L2-Slide 2 -->
-            <section class="slide">
-                <h2 class="text-white" style="font-size: 20px; margin-bottom: 10px;">I. Mise en train & Éléments périphériques</h2>
-                <div class="grid-2">
-                    <div class="card card-amber">
-                        <h3 class="text-amber" style="font-size: 14px;">Mise en train :</h3>
-                        <p class="text-slate" style="font-size: 13px; margin-top: 5px;">Connaissez-vous quelques noms de rois numides ?</p>
-                        <div class="text-box text-emerald" style="margin-top: 5px;">► Massinissa, Jugurtha, Syphax, Micipsa...</div>
-                    </div>
-                    <div class="card card-blue">
-                        <h3 class="text-white" style="font-size: 14px;">Les éléments périphériques :</h3>
-                        <p class="text-slate" style="font-size: 12px; margin-top: 5px;">• <strong>Quel est le titre de ce texte ?</strong> <span class="text-amber font-bold">Jugurtha contre Metellus</span></p>
-                        <p class="text-slate" style="font-size: 12px;">• <strong>Qui est l'auteur ?</strong> <span class="text-amber font-bold">Salluste</span></p>
-                        <p class="text-slate" style="font-size: 12px;">• <strong>Quelle est la source ?</strong> <span class="text-amber font-bold">D'après « La guerre de Jugurtha », Les Belles Lettres (2000)</span></p>
-                    </div>
-                </div>
-                <div class="card card-emerald" style="margin-top: 10px;">
-                    <h3 class="text-emerald" style="font-size: 14px;">Hypothèses de sens :</h3>
-                    <p class="text-slate" style="font-size: 12px;">D'après le titre et l'image, de quoi parle le texte ?</p>
-                    <p class="text-white font-bold" style="font-size: 13px; margin-top: 3px;">► Le texte parle du combat stratégique entre le roi numide Jugurtha et le général romain Metellus.</p>
-                </div>
-            </section>
-
-            <!-- L2-Slide 3 (Texte Support) -->
-            <section class="slide">
-                <h3 class="text-amber" style="font-size: 18px; margin-bottom: 5px;">II. Texte Support : Jugurtha contre Metellus</h3>
-                <div class="card card-amber" style="max-height: 320px; overflow-y: auto; text-align: justify; line-height: 1.6; font-size: 14px;">
-                    <p class="text-emerald" style="margin-bottom: 8px; font-style: italic;">Metellus, consul romain d'Africa mène un combat contre Jugurtha, roi de Numidie et redoutable chef de guerre qui veut chasser les Romains d'Afrique du nord.</p>
-                    <p>Quand Jugurtha voit les derniers rangs de l'armée de Metellus dépasser son avant-garde, il fait <strong class="text-amber">d'abord</strong> occuper la montagne d'où le consul romain vient de descendre pour l'empêcher d'y retourner. <strong class="text-amber">Puis</strong>, donnant le signal, les Numides attaquent à droite, à gauche pour bouleverser nos rangs. [...] Nos soldats qui se portent contre l'ennemi, déconcertés par le désordre qui règne dans le combat, n'y gagnent que d'être blessés.</p>
-                    <p style="margin-top: 8px;">Jugurtha avait, en effet, recommandé à ses cavaliers, chaque fois qu'ils seraient attaqués par les Romains, de fuir dans des directions opposées. Ainsi les Numides, s'ils ne pouvaient pas empêcher les Romains de les poursuivre, profitaient de leur supériorité numérique pour les forcer à se disperser et pour les attaquer ensuite en les encerclant.</p>
-                    <p style="margin-top: 8px;">[...] <strong class="text-amber">Enfin</strong>, ils se repliaient en empruntant la colline car leurs chevaux étaient habitués aux broussailles tandis que les nôtres se heurtaient aux difficultés d'un terrain étranger.</p>
-                    <p class="text-slate" style="text-align: right; font-size: 11px; margin-top: 8px; font-style: italic;">D'après Salluste, « La guerre de Jugurtha », Les Belles Lettres (2000)</p>
-                </div>
-            </section>
-
-            <!-- L2-Slide 4 (Questions 1 à 4) -->
-            <section class="slide">
-                <h3 class="text-white" style="font-size: 18px; margin-bottom: 10px;">III. Exploitation du texte (Questions 1 à 4)</h3>
-                <div class="grid-2">
-                    <div class="card card-blue">
-                        <p class="text-amber" style="font-size: 13px; margin-bottom: 5px;">1) L'auteur de ce texte :</p>
-                        <div style="display: flex; gap: 5px;">
-                            <button onclick="checkAnswer(this, true, 'l2q1')" class="focusable btn">a- Décrit</button>
-                            <button onclick="checkAnswer(this, false, 'l2q1')" class="focusable btn">b- Raconte</button>
-                            <button onclick="checkAnswer(this, false, 'l2q1')" class="focusable btn">c- Explique</button>
-                        </div>
-                    </div>
-                    <div class="card card-emerald">
-                        <p class="text-amber" style="font-size: 13px; margin-bottom: 5px;">2) Quelles sont les deux armées qui s'affrontent ?</p>
-                        <div class="text-box text-emerald">► L'armée Numide et l'armée Romaine.</div>
-                    </div>
-                    <div class="card card-blue">
-                        <p class="text-amber" style="font-size: 13px; margin-bottom: 5px;">3) Qui était Jugurtha ?</p>
-                        <div style="display: flex; gap: 5px;">
-                            <button onclick="checkAnswer(this, false, 'l2q3')" class="focusable btn">a) Consul</button>
-                            <button onclick="checkAnswer(this, false, 'l2q3')" class="focusable btn">b) Général</button>
-                            <button onclick="checkAnswer(this, true, 'l2q3')" class="focusable btn">c) Le roi de Numidie</button>
-                        </div>
-                    </div>
-                    <div class="card card-emerald">
-                        <p class="text-amber" style="font-size: 13px; margin-bottom: 5px;">4) Dans quel but occupe-t-il la montagne ?</p>
-                        <div class="text-box text-emerald">► Pour empêcher le consul romain d'y retourner.</div>
-                    </div>
-                </div>
-                <div id="l2q1-feedback" style="margin-top: 5px; font-weight: bold; text-align: center;"></div>
-            </section>
-
-            <!-- L2-Slide 5 (Questions 5 à 8) -->
-            <section class="slide">
-                <h3 class="text-white" style="font-size: 18px; margin-bottom: 10px;">III. Exploitation du texte (Questions 5 à 8)</h3>
-                <div class="grid-2">
-                    <div class="card card-amber">
-                        <p class="text-amber" style="font-size: 12px; margin-bottom: 3px;">5) Quelle stratégie recommande-t-il à ses cavaliers ?</p>
-                        <button onclick="checkAnswer(this, true, 'l2q5')" class="focusable btn" style="width: 100%; text-align: left; font-size: 11px;">Fuir dans des directions opposées lorsqu'ils sont attaqués</button>
-                    </div>
-                    <div class="card card-emerald">
-                        <p class="text-amber" style="font-size: 12px; margin-bottom: 3px;">6) Mots montrant la difficulté romaine :</p>
-                        <div class="text-box text-emerald" style="font-size: 11px;">« Nos soldats [...] déconcertés par le désordre »</div>
-                    </div>
-                    <div class="card card-amber">
-                        <p class="text-amber" style="font-size: 12px; margin-bottom: 3px;">7) Quel était l'objectif de Jugurtha ?</p>
-                        <button onclick="checkAnswer(this, true, 'l2q7')" class="focusable btn" style="width: 100%; text-align: left; font-size: 11px;">Chasser les Romains d'Afrique du Nord</button>
-                    </div>
-                    <div class="card card-blue">
-                        <p class="text-amber" style="font-size: 12px; margin-bottom: 3px;">8) Réponds par « Vrai » ou « Faux » :</p>
-                        <p class="text-slate" style="font-size: 11px;">• Metellus était un chef numide. <strong class="text-rose-400">FAUX</strong></p>
-                        <p class="text-slate" style="font-size: 11px;">• Jugurtha utilise l'encerclement. <strong class="text-emerald">VRAI</strong></p>
-                        <p class="text-slate" style="font-size: 11px;">• Les soldats romains étaient déconcertés. <strong class="text-emerald">VRAI</strong></p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- L2-Slide 6 (Langue & Synthèse) -->
-            <section class="slide">
-                <h3 class="text-white" style="font-size: 18px; margin-bottom: 8px;">IV. Langue & Tableau de Synthèse (Thèse & Arguments)</h3>
-                <div class="grid-2" style="margin-bottom: 8px;">
-                    <div class="card card-amber">
-                        <h4 class="text-amber" style="font-size: 12px;">9) Connecteurs d'énumération :</h4>
-                        <div class="text-box text-emerald" style="font-size: 12px;">D'abord, ensuite (puis), enfin.</div>
-                    </div>
-                    <div class="card card-blue">
-                        <h4 class="text-amber" style="font-size: 12px;">10) Phrase résumé :</h4>
-                        <div class="text-box text-emerald" style="font-size: 12px;">« Jugurtha est un redoutable chef de guerre. »</div>
-                    </div>
-                </div>
-
-                <div class="card card-emerald">
-                    <h4 class="text-emerald" style="font-size: 14px; margin-bottom: 5px;">Synthèse : Thèse & Arguments</h4>
-                    <p><strong>Thèse :</strong> Jugurtha, un redoutable chef de guerre</p>
-                    <p style="margin-top: 3px;"><strong>Arguments :</strong></p>
-                    <p class="text-slate" style="font-size: 12px;">- Il fait <strong>d'abord</strong> occuper la montagne d'où le consul romain vient de descendre...</p>
-                    <p class="text-slate" style="font-size: 12px;">- Jugurtha avait recommandé à ses cavaliers de fuir pour les forcer à se disperser et les <strong>attaquer ensuite en les encerclant</strong>.</p>
-                </div>
-            </section>
-
-            <!-- L2-Slide 7 (Pour Conclure & Dépassement) -->
-            <section class="slide">
-                <h2 class="text-white" style="font-size: 20px; margin-bottom: 10px;">V. Pour Conclure & Dépassement</h2>
-                <div class="grid-2">
-                    <div class="card card-amber">
-                        <h3 class="text-amber" style="font-size: 16px;">Pour conclure :</h3>
-                        <div class="text-box" style="margin-top: 8px;">
-                            Lorsqu'on veut comprendre un événement, on peut s'appuyer sur un récit d'un témoin, son point de vue et ses arguments.
-                        </div>
-                    </div>
-                    <div class="card card-emerald">
-                        <h3 class="text-emerald" style="font-size: 16px;">Dépassement :</h3>
-                        <p class="text-slate" style="font-size: 12px; margin-top: 5px;">En deux phrases, dis ce que tu as senti quand tu as lu ce texte.</p>
-                        <div class="text-box text-emerald" style="margin-top: 5px;">
-                            « A titre d'exemple : J'ai senti que nos ancêtres ont refusé la colonisation. Ils ont fait preuve de courage et de fierté pour défendre notre liberté. »
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <footer>
-            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8;">
-                <span>Diapositive <strong id="l2-cur" class="text-amber">1</strong> / <span id="l2-tot">7</span></span>
-                <span>الريموت: الأسهم (◄ / ►) للتنقل | زر OK للتأكيد</span>
-            </div>
-            <div class="progress-bar-bg"><div id="l2-progress" class="progress-bar-fill"></div></div>
-        </footer>
-    </div>
-
-
-    <!-- JavaScript Navigation System -->
-    <script>
-        var currentLessonId = null;
-        var slideStates = { lesson1: 0, lesson2: 0 };
-        var totalSlidesMap = { lesson1: 5, lesson2: 7 };
-
-        function launchLesson(lessonId) {
-            currentLessonId = lessonId;
-            document.getElementById('mainPortal').style.display = 'none';
-
-            var containers = document.querySelectorAll('.lesson-container');
-            for(var i=0; i<containers.length; i++) containers[i].classList.remove('active-lesson');
-
-            var activeContainer = document.getElementById(lessonId);
-            activeContainer.classList.add('active-lesson');
-            updateSlideView(lessonId);
-        }
-
-        function returnToPortal() {
-            var containers = document.querySelectorAll('.lesson-container');
-            for(var i=0; i<containers.length; i++) containers[i].classList.remove('active-lesson');
-            document.getElementById('mainPortal').style.display = 'flex';
-            currentLessonId = null;
-            focusPortalFirstItem();
-        }
-
-        function changeSlide(lessonId, direction) {
-            var nextIndex = slideStates[lessonId] + direction;
-            if (nextIndex >= 0 && nextIndex < totalSlidesMap[lessonId]) {
-                slideStates[lessonId] = nextIndex;
-                updateSlideView(lessonId);
-            }
-        }
-
-        function updateSlideView(lessonId) {
-            var container = document.getElementById(lessonId);
-            var slides = container.querySelectorAll('.slide');
-            var curIdx = slideStates[lessonId];
-
-            for(var i=0; i<slides.length; i++) {
-                if(i === curIdx) slides[i].classList.add('active');
-                else slides[i].classList.remove('active');
-            }
-
-            var curElem = document.getElementById(lessonId === 'lesson1' ? 'l1-cur' : 'l2-cur');
-            var progElem = document.getElementById(lessonId === 'lesson1' ? 'l1-progress' : 'l2-progress');
-
-            if(curElem) curElem.textContent = curIdx + 1;
-            if(progElem) progElem.style.width = (((curIdx + 1) / totalSlidesMap[lessonId]) * 100) + '%';
-
-            setTimeout(function() { focusFirstElementInSlide(container); }, 50);
-        }
-
-        function focusPortalFirstItem() {
-            var firstCard = document.querySelector('#mainPortal .focusable');
-            if (firstCard) focusElement(firstCard);
-        }
-
-        function focusFirstElementInSlide(container) {
-            var activeSlide = container.querySelector('.slide.active');
-            if (!activeSlide) return;
-            var focusable = activeSlide.querySelector('.focusable');
-            if (focusable) focusElement(focusable);
-            else {
-                var btn = container.querySelector('header .focusable');
-                if (btn) focusElement(btn);
-            }
-        }
-
-        function focusElement(elem) {
-            if (!elem) return;
-            var focused = document.querySelectorAll('.remote-focused');
-            for(var i=0; i<focused.length; i++) focused[i].classList.remove('remote-focused');
-            elem.focus();
-            elem.classList.add('remote-focused');
-        }
-
-        function checkAnswer(selectedBtn, isCorrect, feedbackId) {
-            var feedback = document.getElementById(feedbackId + '-feedback');
-            if (isCorrect) {
-                selectedBtn.style.backgroundColor = '#059669';
-                selectedBtn.style.borderColor = '#10b981';
-                if(feedback) {
-                    feedback.style.color = '#34d399';
-                    feedback.textContent = 'Bravo ! Bonne réponse.';
-                }
-            } else {
-                selectedBtn.style.backgroundColor = '#e11d48';
-                selectedBtn.style.borderColor = '#f43f5e';
-                if(feedback) {
-                    feedback.style.color = '#f43f5e';
-                    feedback.textContent = 'Réponse incorrecte. Réessayez !';
-                }
-            }
-        }
-
-        // Remote Navigation System
-        document.addEventListener('keydown', function(e) {
-            var focusableElements = [];
-            if (!currentLessonId) {
-                focusableElements = Array.prototype.slice.call(document.querySelectorAll('#mainPortal .focusable'));
-            } else {
-                var container = document.getElementById(currentLessonId);
-                var activeSlide = container.querySelector('.slide.active');
-                var headerFocusables = Array.prototype.slice.call(container.querySelectorAll('header .focusable'));
-                var slideFocusables = activeSlide ? Array.prototype.slice.call(activeSlide.querySelectorAll('.focusable')) : [];
-                focusableElements = headerFocusables.concat(slideFocusables);
-            }
-
-            var currentFocused = document.activeElement;
-            var currentIndex = focusableElements.indexOf(currentFocused);
-
-            switch(e.key) {
-                case 'ArrowRight':
-                    if (currentLessonId && (currentIndex === -1 || currentIndex === focusableElements.length - 1)) {
-                        changeSlide(currentLessonId, 1);
-                    } else if (currentIndex < focusableElements.length - 1) {
-                        focusElement(focusableElements[currentIndex + 1]);
-                    }
-                    e.preventDefault();
-                    break;
-                case 'ArrowLeft':
-                    if (currentLessonId && currentIndex <= 0) {
-                        changeSlide(currentLessonId, -1);
-                    } else if (currentIndex > 0) {
-                        focusElement(focusableElements[currentIndex - 1]);
-                    }
-                    e.preventDefault();
-                    break;
-                case 'ArrowDown':
-                    if (currentIndex < AllFocusablesLength(focusableElements) - 1) focusElement(focusableElements[currentIndex + 1]);
-                    e.preventDefault();
-                    break;
-                case 'ArrowUp':
-                    if (currentIndex > 0) focusElement(focusableElements[currentIndex - 1]);
-                    e.preventDefault();
-                    break;
-                case 'Enter':
-                case ' ':
-                    if (currentFocused && typeof currentFocused.click === 'function') currentFocused.click();
-                    e.preventDefault();
-                    break;
-            }
-        });
-
-        function AllFocusablesLength(arr) { return arr.length; }
-
-        window.onload = function() {
-            focusPortalFirstItem();
-        };
-    </script>
+window.onload=function(){
+ Vocab('voc',[["architecte","celui qui conçoit et prépare un grand projet"],["tomber au champ d'honneur","mourir en combattant pour son pays"],["mobiliser","rassembler et motiver les gens pour agir"],["persuasion","capacité à convaincre les autres"],["colonisateur","celui qui occupe et domine un pays étranger"],["moudjahid (pl. moudjahidine)","combattant de la libération nationale"]]);
+ Order('o3','Remets les arguments dans l\'ordre','Didouche Mourad : choisis les phrases dans l\'ordre du texte (D\'abord, Ensuite, Enfin).',
+  ["D'abord, il était chef de la zone 2 et réputé pour sa conviction.","Ensuite, il a convaincu Ali Mendjeli de rejoindre le projet révolutionnaire.","Enfin, il usait d'un discours fondé et entraînant."]);
+ Quiz('q3','Quiz éclair : Didouche Mourad',[
+  {q:"Quand Didouche Mourad est-il tombé au champ d'honneur ?",o:["18 janvier 1955","1er novembre 1954","5 juillet 1962"],a:0},
+  {q:"De quelle zone était-il le chef ?",o:["Zone 2","Zone 1","Zone 5"],a:0},
+  {q:"Combien de membres comptait le groupe des historiques ?",o:["6","3","10"],a:0},
+  {q:"Quel connecteur introduit le dernier argument du texte ?",o:["D'abord","Ensuite","Enfin"],a:2},
+  {q:"Qu'est-ce qui lui permettait de mieux mobiliser ?",o:["Sa force de persuasion","Sa richesse","Sa vitesse"],a:0}],true);
+ Quiz('a1','Activité 01 p. 33 : complète avec le bon connecteur',[
+  {q:"La lutte contre l'occupant n'a jamais cessé. Il y eut ___, de 1830 à 1848, l'émir Abdelkader.",o:["d'abord","enfin"],a:0},
+  {q:"___, Fatma N'soumer, la femme rebelle fut une grande résistante.",o:["D'abord","Ensuite"],a:1},
+  {q:"En 1853, elle n'avait que 23 ans dans son Djurdjura natal. Il y eut ___ Mohamed El Mokrani qui fit appel au Cheikh Haddad.",o:["ensuite","enfin"],a:1}],false);
+ var T=["1er argument","2e argument","Dernier argument"],W=[["d'abord",0],["premièrement",0],["en premier lieu",0],["ensuite",1],["en outre",1],["d'autre part",1],["en second lieu",1],["puis",1],["enfin",2],["en dernier lieu",2]],I=[];
+ W.forEach(function(w){I.push({q:'« '+w[0]+' » introduit quel argument ?',o:T,a:w[1],c:'« '+w[0]+' » <b class="g">→ '+T[w[1]]+'</b>'})});
+ Quiz('a2','Jeu de tri : classe le connecteur',I,true);
+ Order('o4','Reconstitue le paragraphe','Il est important de connaitre l\'histoire de son pays. Remets les arguments dans l\'ordre :',
+  ["D'abord, il faut se familiariser avec l'histoire de son pays afin de mieux comprendre sa culture.","Ensuite, l'Algérie a connu de nombreux évènements historiques qui ont façonné son passé.","Enfin, apprendre sur ces fruits aide à comprendre les problèmes actuels."]);
+ go(0)};
+</script>
 </body>
 </html>
